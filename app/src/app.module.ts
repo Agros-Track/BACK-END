@@ -15,6 +15,7 @@ import { LocationsModule } from './modules/locations/locations.module';
 import { MovementsModule } from './modules/movements/movements.module';
 import { HealthModule } from './modules/health/health.module';
 import { FeedingModule } from './modules/feeding/feeding.module';
+import { WeightModule } from './modules/weight/weight.module';
 
 
 @Module({
@@ -48,12 +49,13 @@ import { FeedingModule } from './modules/feeding/feeding.module';
     MovementsModule,
     HealthModule,
     FeedingModule,
+    WeightModule,
   ],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
     consumer
-    .apply(TenantMiddleware)
-    .forRoutes('*');
+      .apply(TenantMiddleware)
+      .forRoutes('*');
   }
 }
