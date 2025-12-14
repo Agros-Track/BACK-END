@@ -1,30 +1,42 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 import { CreateTenantDto } from './dto/create-tenant.dto';
 import { UpdateTenantDto } from './dto/update-tenant.dto';
+import { Tenant } from './entities/tenant.entity';
 
 @Injectable()
 export class TenantService {
-  create(createTenantDto: CreateTenantDto) {
-    return 'This action adds a new tenant';
+  constructor(
+    @InjectRepository(Tenant) private readonly tenantsRepo: Repository<Tenant>,
+  ) {}
+
+  async create(dto: CreateTenantDto) {
+    const tenant = this.tenantsRepo.create({ ...dto });
+    await this.tenantsRepo.save(tenant);
+    return tenant;
   }
 
-  getTenantById(id: string) {
-    return `This action returns a tenant with id #${id}`;
+  async findAll() {
+    return this.tenantsRepo.find();
   }
 
-  findAll() {
-    return `This action returns all tenant`;
+  async findOne(id: number) {
+    const tenant = await this.tenantsRepo.findOne({ where: { tenant_id: id } });
+    if (!tenant) throw new NotFoundException('Tenant not found');
+    return tenant;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} tenant`;
+  async update(id: number, dto: UpdateTenantDto) {
+    const tenant = await this.findOne(id);
+    Object.assign(tenant, dto);
+    await this.tenantsRepo.save(tenant);
+    return tenant;
   }
 
-  update(id: number, updateTenantDto: UpdateTenantDto) {
-    return `This action updates a #${id} tenant`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} tenant`;
+  async remove(id: number) {
+    const tenant = await this.findOne(id);
+    await this.tenantsRepo.delete(tenant.tenant_id);
+    return { deleted: true };
   }
 }

@@ -1,26 +1,60 @@
-import { Injectable } from '@nestjs/common';
+import {
+  Injectable,
+  BadRequestException,
+  NotFoundException,
+} from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 import { CreateRoleDto } from './dto/create-role.dto';
 import { UpdateRoleDto } from './dto/update-role.dto';
+import { Role } from './entities/role.entity';
 
 @Injectable()
 export class RolesService {
-  create(createRoleDto: CreateRoleDto) {
-    return 'This action adds a new role';
+  constructor(
+    @InjectRepository(Role) private readonly rolesRepo: Repository<Role>,
+  ) {}
+
+  async create(dto: CreateRoleDto, tenantId: number) {
+    // Verificar si el slug ya existe para este tenant
+    if (dto.slug) {
+      const existing = await this.rolesRepo.findOne({
+        where: { slug: dto.slug },
+      });
+      if (existing) throw new BadRequestException('Role slug already exists');
+    }
+
+    const role = this.rolesRepo.create({
+      name: dto.name,
+      slug: dto.slug ?? null,
+      description: dto.description ?? null,
+    });
+    await this.rolesRepo.save(role);
+    return role;
   }
 
-  findAll() {
-    return `This action returns all roles`;
+  async findAll(tenantId: number) {
+    return this.rolesRepo.find();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} role`;
-  }
+  async update(id: number, dto: UpdateRoleDto, tenantId: number) {
+    const role = await this.rolesRepo.findOne({ where: { role_id: id } });
+    if (!role) throw new NotFoundException('Role not found');
 
-  update(id: number, updateRoleDto: UpdateRoleDto) {
-    return `This action updates a #${id} role`;
-  }
+    // Verificar si el nuevo slug ya existe
+    if (dto.slug && dto.slug !== role.slug) {
+      const existing = await this.rolesRepo.findOne({
+        where: { slug: dto.slug },
+      });
+      if (existing) throw new BadRequestException('Role slug already exists');
+    }
 
-  remove(id: number) {
-    return `This action removes a #${id} role`;
+    if (dto.name) role.name = dto.name;
+    if (dto.slug !== undefined) role.slug = dto.slug ?? null;
+    if (dto.description !== undefined)
+      role.description = dto.description ?? null;
+
+    await this.rolesRepo.save(role);
+    return role;
   }
 }

@@ -1,32 +1,88 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Req, UseGuards } from '@nestjs/common';
+import {
+  ApiTags,
+  ApiOperation,
+  ApiResponse,
+  ApiBearerAuth,
+  ApiHeader,
+} from '@nestjs/swagger';
 import { AuthService } from './auth.service';
+import { LoginAuthDto } from './dto/login-auth.dto';
+import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
+import { CurrentUser } from '../../common/decorators/current-user.decorator';
+import { TenantId } from 'src/common/decorators/tenant.decorator';
 
+@ApiTags('Auth')
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
-  @Post()
-  create(@Body() createAuthDto) {
-    return this.authService.create(createAuthDto);
+  @Post('login')
+  @ApiOperation({
+    summary: 'User login',
+    description:
+      'Authenticate user with email and password. Returns JWT token and user data. SUPER_ADMIN does not require x-tenant-id header.',
+  })
+  @ApiHeader({
+    name: 'x-tenant-id',
+    description:
+      'Tenant ID (required for regular users, optional for SUPER_ADMIN)',
+    required: false,
+    schema: { type: 'integer', example: 1 },
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Successful login',
+    schema: {
+      example: {
+        access_token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...',
+        user: {
+          user_id: 1,
+          name: 'Juan Pérez',
+          email: 'admin@farm1.com',
+          role: { role_id: 1, name: 'Admin Tenant', slug: 'ADMIN_TENANT' },
+        },
+      },
+    },
+  })
+  @ApiResponse({
+    status: 401,
+    description: 'Invalid credentials or blocked user',
+  })
+  @ApiResponse({ status: 404, description: 'User not found' })
+  async login(@Body() dto: LoginAuthDto, @Req() req: any) {
+    const tenantId = req['tenantId'];
+    return this.authService.login(dto, tenantId);
   }
 
-  @Get()
-  findAll() {
-    return this.authService.findAll();
-  }
-
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.authService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateAuthDto) {
-    return this.authService.update(+id, updateAuthDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.authService.remove(+id);
+  @Get('me')
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth('JWT-auth')
+  @ApiOperation({
+    summary: 'Get current profile',
+    description: 'Returns authenticated user information based on JWT token',
+  })
+  @ApiHeader({
+    name: 'x-tenant-id',
+    description: 'Tenant ID',
+    required: true,
+    schema: { type: 'integer', example: 1 },
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'User profile',
+    schema: {
+      example: {
+        user_id: 1,
+        tenant_id: 1,
+        name: 'Juan Pérez',
+        email: 'admin@farm1.com',
+        role: { role_id: 1, name: 'Admin Tenant', slug: 'ADMIN_TENANT' },
+      },
+    },
+  })
+  @ApiResponse({ status: 401, description: 'Not authenticated' })
+  async me(@CurrentUser() user: any) {
+    return this.authService.me(user);
   }
 }
