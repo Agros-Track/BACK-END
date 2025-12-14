@@ -6,8 +6,8 @@ import {
     JoinColumn,
     CreateDateColumn,
 } from 'typeorm';
-import { Animal } from '../../animals/entities/animal.entity';
-import { Lote } from '../../locations/entities/lote.entity';
+import { Animal } from '../../animals/entities/animals.entity';
+import { Lote } from '../../locations/entities/lot.entity';
 import { User } from '../../users/entities/user.entity';
 
 @Entity('alimentacion')

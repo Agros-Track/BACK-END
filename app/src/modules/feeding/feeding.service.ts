@@ -1,7 +1,7 @@
 import { Injectable, BadRequestException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Alimentacion } from './entities/alimentacion.entity';
+import { Alimentacion } from './entities/feeding.entity';
 import { CreateFeedingDto } from './dto/create-feeding.dto';
 import { AnimalsService } from '../animals/animals.service';
 import { LocationsService } from '../locations/locations.service';

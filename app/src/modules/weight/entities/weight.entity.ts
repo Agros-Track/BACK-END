@@ -1,5 +1,5 @@
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
-import { Animal } from '../../animals/entities/animal.entity';
+import { Animal } from '../../animals/entities/animals.entity';
 
 @Entity('pesaje')
 export class Weight {

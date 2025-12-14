@@ -1,9 +1,9 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, Req } from '@nestjs/common';
 import { LocationsService } from './locations.service';
-import { CreateFincaDto } from './dto/create-finca.dto';
-import { UpdateFincaDto } from './dto/update-finca.dto';
-import { CreateLoteDto } from './dto/create-lote.dto';
-import { UpdateLoteDto } from './dto/update-lote.dto';
+import { CreateFincaDto } from './dto/create-farm.dto';
+import { UpdateFincaDto } from './dto/update-farm.dto';
+import { CreateLoteDto } from './dto/create-lot.dto';
+import { UpdateLoteDto } from './dto/update-lot.dto';
 
 @Controller('locations')
 export class LocationsController {

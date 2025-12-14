@@ -6,7 +6,7 @@ import {
     UpdateDateColumn,
     OneToMany,
 } from 'typeorm';
-import { Lote } from './lote.entity';
+import { Lote } from './lot.entity';
 
 @Entity('finca')
 export class Finca {

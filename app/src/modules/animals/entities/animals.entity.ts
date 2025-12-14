@@ -8,8 +8,8 @@ import {
     JoinColumn,
     OneToMany,
 } from 'typeorm';
-import { Finca } from '../../locations/entities/finca.entity';
-import { Lote } from '../../locations/entities/lote.entity';
+import { Finca } from '../../locations/entities/farm.entity';
+import { Lote } from '../../locations/entities/lot.entity';
 
 @Entity('animal')
 export class Animal {

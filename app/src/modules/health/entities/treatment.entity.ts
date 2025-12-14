@@ -5,8 +5,8 @@ import {
     ManyToOne,
     JoinColumn,
 } from 'typeorm';
-import { Animal } from '../../animals/entities/animal.entity';
-import { Enfermedad } from './enfermedad.entity';
+import { Animal } from '../../animals/entities/animals.entity';
+import { Enfermedad } from './disease.entity';
 import { User } from '../../users/entities/user.entity';
 
 @Entity('tratamiento')
