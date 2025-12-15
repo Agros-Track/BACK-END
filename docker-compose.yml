@@ -1,0 +1,27 @@
+services:
+  app:
+    build: ./app
+    container_name: ${APP_CONTAINER_NAME}
+    working_dir: /usr/src/app
+    ports:
+      - "${APP_PORT}:3000"
+    volumes:
+      - ./app:/usr/src/app
+      - ./.env:/usr/src/app/.env
+      - /usr/src/app/node_modules
+    env_file:
+      - ./.env
+    environment:
+      - NODE_ENV=${NODE_ENV}
+      - DATABASE_URL=${DATABASE_URL}
+    deploy:
+      resources:
+        limits:
+          cpus: "${APP_CPU_LIMIT}"
+          memory: ${APP_MEM_LIMIT}
+    networks:
+      - backend
+
+networks:
+  backend:
+    driver: bridge
