@@ -40,6 +40,7 @@ import { WeightModule } from './modules/weight/weight.module';
     UsersModule,
     AuthModule,
     RolesModule,
+    AnimalsModule,
     TenantModule,
     LocationsModule,
     MovementsModule,
