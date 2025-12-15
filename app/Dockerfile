@@ -1,16 +1,22 @@
-FROM node:20-alpine
+FROM node:20-alpine AS builder
 
-# Definir directorio de trabajo
-WORKDIR /usr/src/app
+WORKDIR /app
 
-# Copiar package.json y package-lock.json antes que el código
 COPY package*.json ./
-
-# Instalar dependencias (solo en la imagen base)
 RUN npm install
 
-# Exponer el puerto
+COPY . .
+RUN npm run build
+
+FROM node:20-alpine
+
+WORKDIR /app
+
+COPY package*.json ./
+RUN npm install --omit=dev
+
+COPY --from=builder /app/dist ./dist
+
 EXPOSE 3000
 
-# Comando por defecto
-CMD ["npm", "run", "start:dev"]
+CMD ["node", "dist/main.js"]
