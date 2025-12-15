@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import { createParamDecorator, ExecutionContext } from '@nestjs/common';
 
 export const CurrentUser = createParamDecorator(
@@ -6,3 +7,6 @@ export const CurrentUser = createParamDecorator(
     return request.user;
   },
 );
+=======
+// TODO: Logic for current user decorator
+>>>>>>> develop

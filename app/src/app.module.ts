@@ -1,4 +1,6 @@
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
+
+import { AnimalsModule } from './modules/animals/animals.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { RolesModule } from './modules/roles/roles.module';
 import { TenantModule } from './modules/tenant/tenant.module';
@@ -8,6 +10,12 @@ import configuration from './config/configuration';
 import { validationSchema } from './config/validation.schema';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { TenantMiddleware } from './common/middlewares/tenant.middleware';
+import { LocationsModule } from './modules/locations/locations.module';
+import { MovementsModule } from './modules/movements/movements.module';
+import { HealthModule } from './modules/health/health.module';
+import { FeedingModule } from './modules/feeding/feeding.module';
+import { WeightModule } from './modules/weight/weight.module';
+
 
 @Module({
   imports: [
@@ -33,10 +41,17 @@ import { TenantMiddleware } from './common/middlewares/tenant.middleware';
     AuthModule,
     RolesModule,
     TenantModule,
+    LocationsModule,
+    MovementsModule,
+    HealthModule,
+    FeedingModule,
+    WeightModule,
   ],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
-    consumer.apply(TenantMiddleware).forRoutes('*');
+    consumer
+      .apply(TenantMiddleware)
+      .forRoutes('*');
   }
 }

@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import { createParamDecorator, ExecutionContext } from '@nestjs/common';
 
 export const TenantId = createParamDecorator(
@@ -6,3 +7,6 @@ export const TenantId = createParamDecorator(
     return request['tenantId'];
   },
 );
+=======
+// TODO:  Logic for tenant decorator
+>>>>>>> develop
