@@ -1,6 +1,3 @@
-<<<<<<< HEAD
-export class CreateAnimalDto {}
-=======
 import { IsString, IsNotEmpty, IsOptional, IsNumber, IsDateString, IsEnum } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
@@ -50,4 +47,3 @@ export class CreateAnimalDto {
     @IsOptional()
     status?: string;
 }
->>>>>>> feature/modules

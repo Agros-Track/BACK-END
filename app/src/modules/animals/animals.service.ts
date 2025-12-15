@@ -1,29 +1,3 @@
-<<<<<<< HEAD
-import { Injectable } from '@nestjs/common';
-import { CreateAnimalDto } from './dto/create-animal.dto';
-import { UpdateAnimalDto } from './dto/update-animal.dto';
-
-@Injectable()
-export class AnimalsService {
-  create(createAnimalDto: CreateAnimalDto) {
-    return 'This action adds a new animal';
-  }
-
-  findAll() {
-    return `This action returns all animals`;
-  }
-
-  findOne(id: number) {
-    return `This action returns a #${id} animal`;
-  }
-
-  update(id: number, updateAnimalDto: UpdateAnimalDto) {
-    return `This action updates a #${id} animal`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} animal`;
-=======
 import { Injectable, NotFoundException, ConflictException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -108,6 +82,5 @@ export class AnimalsService {
   async remove(id: number, tenantId: number) {
     const animal = await this.findOne(id, tenantId);
     return await this.animalRepository.remove(animal);
->>>>>>> feature/modules
   }
 }

@@ -1,6 +1,3 @@
-<<<<<<< HEAD
-export class Animal {}
-=======
 import {
     Entity,
     PrimaryGeneratedColumn,
@@ -63,4 +60,3 @@ export class Animal {
     @UpdateDateColumn({ name: 'updated_at', type: 'timestamptz' })
     updatedAt: Date;
 }
->>>>>>> feature/modules
