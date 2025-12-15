@@ -8,6 +8,13 @@ export class TenantService {
     return 'This action adds a new tenant';
   }
 
+<<<<<<< HEAD
+=======
+  getTenantById(id: string) {
+    return `This action returns a tenant with id #${id}`;
+  }
+
+>>>>>>> feature/modules
   findAll() {
     return `This action returns all tenant`;
   }
