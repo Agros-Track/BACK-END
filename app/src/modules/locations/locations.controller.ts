@@ -1,17 +1,18 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Req } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Req, UseGuards } from '@nestjs/common';
 import { LocationsService } from './locations.service';
 import { CreateFarmDto } from './dto/create-farm.dto';
 import { UpdateFarmDto } from './dto/update-farm.dto';
 import { CreateLotDto } from './dto/create-lot.dto';
 import { UpdateLotDto } from './dto/update-lot.dto';
-import { ApiTags, ApiOperation, ApiResponse, ApiHeader } from '@nestjs/swagger';
+import { ApiTags, ApiOperation, ApiResponse, ApiSecurity } from '@nestjs/swagger';
+import { JwtAuthGuard } from 'src/common/guards/jwt-auth.guard';
+import { RolesGuard } from 'src/common/guards/roles.guard';
+import { Roles } from 'src/common/decorators/roles.decorator';
 
 @ApiTags('Locations')
-@ApiHeader({
-    name: 'X-Tenant-ID',
-    description: 'Tenant ID required for all operations',
-    required: true,
-})
+@ApiSecurity('JWT-auth', ['JWT-auth'])
+@ApiSecurity('tenant-id', ['tenant-id'])
+@UseGuards(JwtAuthGuard, RolesGuard)
 @Controller('locations')
 export class LocationsController {
     constructor(private readonly locationsService: LocationsService) { }
@@ -23,6 +24,7 @@ export class LocationsController {
     // --- FARMS ---
 
     @Post('farms')
+    @Roles('ADMIN_TENANT')
     @ApiOperation({ summary: 'Create a farm' })
     @ApiResponse({
         status: 201,
@@ -40,6 +42,7 @@ export class LocationsController {
     }
 
     @Get('farms')
+    @Roles('ADMIN_TENANT')
     @ApiOperation({ summary: 'Get all farms' })
     @ApiResponse({
         status: 200,
@@ -58,6 +61,7 @@ export class LocationsController {
     }
 
     @Get('farms/:id')
+    @Roles('ADMIN_TENANT')
     @ApiOperation({ summary: 'Get a specific farm' })
     @ApiResponse({
         status: 200,
@@ -79,6 +83,7 @@ export class LocationsController {
     }
 
     @Patch('farms/:id')
+    @Roles('ADMIN_TENANT')
     @ApiOperation({ summary: 'Update a farm' })
     @ApiResponse({
         status: 200,
@@ -98,6 +103,7 @@ export class LocationsController {
     }
 
     @Delete('farms/:id')
+    @Roles('ADMIN_TENANT')
     @ApiOperation({ summary: 'Delete a farm' })
     @ApiResponse({ status: 200, description: 'The farm has been successfully deleted.' })
     @ApiResponse({ status: 404, description: 'Farm not found.' })
@@ -108,6 +114,7 @@ export class LocationsController {
     // --- LOTS ---
 
     @Post('lots')
+    @Roles('ADMIN_TENANT')
     @ApiOperation({ summary: 'Create a lot' })
     @ApiResponse({
         status: 201,
@@ -127,6 +134,7 @@ export class LocationsController {
     }
 
     @Get('lots')
+    @Roles('ADMIN_TENANT','TRABAJADOR')
     @ApiOperation({ summary: 'Get all lots' })
     @ApiResponse({
         status: 200,
@@ -147,6 +155,7 @@ export class LocationsController {
     }
 
     @Get('lots/:id')
+    @Roles('ADMIN_TENANT','TRABAJADOR')
     @ApiOperation({ summary: 'Get a specific lot' })
     @ApiResponse({
         status: 200,
@@ -168,6 +177,7 @@ export class LocationsController {
     }
 
     @Patch('lots/:id')
+    @Roles('ADMIN_TENANT')
     @ApiOperation({ summary: 'Update a lot' })
     @ApiResponse({
         status: 200,
@@ -186,6 +196,7 @@ export class LocationsController {
     }
 
     @Delete('lots/:id')
+    @Roles('ADMIN_TENANT')
     @ApiOperation({ summary: 'Delete a lot' })
     @ApiResponse({
         status: 200,

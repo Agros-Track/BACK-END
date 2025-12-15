@@ -4,13 +4,11 @@ import {
   ApiOperation,
   ApiResponse,
   ApiBearerAuth,
-  ApiHeader,
 } from '@nestjs/swagger';
 import { AuthService } from './auth.service';
 import { LoginAuthDto } from './dto/login-auth.dto';
 import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
 import { CurrentUser } from '../../common/decorators/current-user.decorator';
-import { TenantId } from 'src/common/decorators/tenant.decorator';
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -22,13 +20,6 @@ export class AuthController {
     summary: 'User login',
     description:
       'Authenticate user with email and password. Returns JWT token and user data. SUPER_ADMIN does not require x-tenant-id header.',
-  })
-  @ApiHeader({
-    name: 'x-tenant-id',
-    description:
-      'Tenant ID (required for regular users, optional for SUPER_ADMIN)',
-    required: false,
-    schema: { type: 'integer', example: 1 },
   })
   @ApiResponse({
     status: 200,
@@ -61,12 +52,6 @@ export class AuthController {
   @ApiOperation({
     summary: 'Get current profile',
     description: 'Returns authenticated user information based on JWT token',
-  })
-  @ApiHeader({
-    name: 'x-tenant-id',
-    description: 'Tenant ID',
-    required: true,
-    schema: { type: 'integer', example: 1 },
   })
   @ApiResponse({
     status: 200,

@@ -1,14 +1,15 @@
-import { Controller, Post, Body, Get, Param, Req } from '@nestjs/common';
+import { Controller, Post, Body, Get, Param, Req, UseGuards } from '@nestjs/common';
 import { MovementsService } from './movements.service';
 import { CreateMovementDto } from './dto/create-movement.dto';
-import { ApiTags, ApiOperation, ApiResponse, ApiHeader } from '@nestjs/swagger';
+import { ApiTags, ApiOperation, ApiResponse, ApiSecurity } from '@nestjs/swagger';
+import { JwtAuthGuard } from 'src/common/guards/jwt-auth.guard';
+import { RolesGuard } from 'src/common/guards/roles.guard';
+import { Roles } from 'src/common/decorators/roles.decorator';
 
 @ApiTags('Movements')
-@ApiHeader({
-    name: 'X-Tenant-ID',
-    description: 'Tenant ID required for all operations',
-    required: true,
-})
+@ApiSecurity('JWT-auth', ['JWT-auth'])
+@ApiSecurity('tenant-id', ['tenant-id'])
+@UseGuards(JwtAuthGuard, RolesGuard)
 @Controller('movements')
 export class MovementsController {
     constructor(private readonly movementsService: MovementsService) { }
@@ -22,6 +23,7 @@ export class MovementsController {
     }
 
     @Post()
+    @Roles('ADMIN_TENANT','TRABAJADOR')
     @ApiOperation({ summary: 'Register an animal movement' })
     @ApiResponse({ status: 201, description: 'Movement recorded successfully.' })
     @ApiResponse({ status: 400, description: 'Bad Request (e.g. invalid IDs).' })
@@ -34,6 +36,7 @@ export class MovementsController {
     }
 
     @Get('animal/:animalId')
+    @Roles('ADMIN_TENANT','TRABAJADOR')
     @ApiOperation({ summary: 'Get movement history for an animal' })
     @ApiResponse({
         status: 200,

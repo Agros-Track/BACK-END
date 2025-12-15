@@ -13,9 +13,7 @@ services:
       - ./.env
     environment:
       - NODE_ENV=${NODE_ENV}
-      - DATABASE_URL=postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:${POSTGRES_PORT}/${POSTGRES_DB}
-    depends_on:
-      - db
+      - DATABASE_URL=${DATABASE_URL}
     deploy:
       resources:
         limits:
@@ -23,29 +21,6 @@ services:
           memory: ${APP_MEM_LIMIT}
     networks:
       - backend
-
-  db:
-    image: postgres:15-alpine
-    ports:
-      - "$POSTGRES_LOCAL:$POSTGRES_PORT"
-    container_name: ${DB_CONTAINER_NAME}
-    restart: always
-    environment:
-      - POSTGRES_USER=${POSTGRES_USER}
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-      - POSTGRES_DB=${POSTGRES_DB}
-    volumes:
-      - db_data:/var/lib/postgresql/data
-    deploy:
-      resources:
-        limits:
-          cpus: "${DB_CPU_LIMIT}"
-          memory: ${DB_MEM_LIMIT}
-    networks:
-      - backend
-
-volumes:
-  db_data:
 
 networks:
   backend:

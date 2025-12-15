@@ -29,9 +29,6 @@ export class Tenant {
   @Column({ type: 'varchar', length: 10, nullable: true })
   language?: string | null;
 
-  @Column({ type: 'varchar', length: 50, nullable: true })
-  plan?: string | null;
-
   @Column({ type: 'int', default: 0 })
   animal_limit: number;
 

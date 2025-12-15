@@ -1,14 +1,15 @@
-import { Controller, Post, Body, Get, Param, Req } from '@nestjs/common';
+import { Controller, Post, Body, Get, Param, Req, UseGuards } from '@nestjs/common';
 import { FeedingService } from './feeding.service';
 import { CreateFeedingDto } from './dto/create-feeding.dto';
-import { ApiTags, ApiOperation, ApiResponse, ApiHeader } from '@nestjs/swagger';
+import { ApiTags, ApiOperation, ApiResponse, ApiSecurity } from '@nestjs/swagger';
+import { JwtAuthGuard } from 'src/common/guards/jwt-auth.guard';
+import { RolesGuard } from 'src/common/guards/roles.guard';
+import { Roles } from 'src/common/decorators/roles.decorator';
 
 @ApiTags('Feeding')
-@ApiHeader({
-    name: 'X-Tenant-ID',
-    description: 'Tenant ID required for all operations',
-    required: true,
-})
+@ApiSecurity('JWT-auth', ['JWT-auth'])
+@ApiSecurity('tenant-id', ['tenant-id'])
+@UseGuards(JwtAuthGuard, RolesGuard)
 @Controller('feeding')
 export class FeedingController {
     constructor(private readonly feedingService: FeedingService) { }
@@ -22,6 +23,7 @@ export class FeedingController {
     }
 
     @Post()
+    @Roles('ADMIN_TENANT', 'TRABAJADOR')
     @ApiOperation({ summary: 'Create a feeding record' })
     @ApiResponse({
         status: 201,

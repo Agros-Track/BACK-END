@@ -31,8 +31,11 @@ import { WeightModule } from './modules/weight/weight.module';
       useFactory: (config: ConfigService) => ({
         type: 'postgres',
         url: process.env.DATABASE_URL,
+        ssl: {
+          rejectUnauthorized: false,
+        },
         autoLoadEntities: true,
-        synchronize: true, // Change false in production
+        synchronize: false, // Change false in production
       }),
       inject: [ConfigService],
     }),

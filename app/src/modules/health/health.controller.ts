@@ -1,16 +1,17 @@
-import { Controller, Post, Body, Get, Param, Req } from '@nestjs/common';
+import { Controller, Post, Body, Get, Param, Req, UseGuards } from '@nestjs/common';
 import { HealthService } from './health.service';
 import { CreateVaccineDto } from './dto/create-vaccine.dto';
 import { CreateDiseaseDto } from './dto/create-disease.dto';
 import { CreateTreatmentDto } from './dto/create-treatment.dto';
-import { ApiTags, ApiOperation, ApiResponse, ApiHeader } from '@nestjs/swagger';
+import { ApiTags, ApiOperation, ApiResponse, ApiSecurity } from '@nestjs/swagger';
+import { JwtAuthGuard } from 'src/common/guards/jwt-auth.guard';
+import { RolesGuard } from 'src/common/guards/roles.guard';
+import { Roles } from 'src/common/decorators/roles.decorator';
 
 @ApiTags('Health')
-@ApiHeader({
-    name: 'X-Tenant-ID',
-    description: 'Tenant ID required for all operations',
-    required: true,
-})
+@ApiSecurity('JWT-auth', ['JWT-auth'])
+@ApiSecurity('tenant-id', ['tenant-id'])
+@UseGuards(JwtAuthGuard, RolesGuard)
 @Controller('health')
 export class HealthController {
     constructor(private readonly healthService: HealthService) { }
@@ -26,6 +27,7 @@ export class HealthController {
     // --- VACCINES ---
 
     @Post('vaccines')
+    @Roles('ADMIN_TENANT', 'VETERINARIO')
     @ApiOperation({ summary: 'Record a vaccination' })
     @ApiResponse({ status: 201, description: 'Vaccine recorded successfully.' })
     @ApiResponse({ status: 400, description: 'Bad Request.' })
@@ -59,6 +61,7 @@ export class HealthController {
     // --- DISEASES ---
 
     @Post('diseases')
+    @Roles('ADMIN_TENANT', 'VETERINARIO')
     @ApiOperation({ summary: 'Record a disease/illness' })
     @ApiResponse({ status: 201, description: 'Disease recorded successfully.' })
     createDisease(@Body() dto: CreateDiseaseDto, @Req() req: any) {
@@ -90,6 +93,7 @@ export class HealthController {
     // --- TREATMENTS ---
 
     @Post('treatments')
+    @Roles('ADMIN_TENANT', 'VETERINARIO')
     @ApiOperation({ summary: 'Record a treatment' })
     @ApiResponse({ status: 201, description: 'Treatment recorded successfully.' })
     createTreatment(@Body() dto: CreateTreatmentDto, @Req() req: any) {

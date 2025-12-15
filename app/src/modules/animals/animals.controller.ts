@@ -1,15 +1,17 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Req } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Req, UseGuards } from '@nestjs/common';
 import { AnimalsService } from './animals.service';
 import { CreateAnimalDto } from './dto/create-animal.dto';
 import { UpdateAnimalDto } from './dto/update-animal.dto';
-import { ApiTags, ApiOperation, ApiResponse, ApiHeader } from '@nestjs/swagger';
+import { ApiTags, ApiOperation, ApiResponse, ApiSecurity } from '@nestjs/swagger';
+import { JwtAuthGuard } from 'src/common/guards/jwt-auth.guard';
+import { RolesGuard } from 'src/common/guards/roles.guard';
+import { Roles } from 'src/common/decorators/roles.decorator';
+
 
 @ApiTags('Animals')
-@ApiHeader({
-  name: 'X-Tenant-ID',
-  description: 'Tenant ID required for all operations',
-  required: true,
-})
+@ApiSecurity('JWT-auth', ['JWT-auth'])
+@ApiSecurity('tenant-id', ['tenant-id'])
+@UseGuards(JwtAuthGuard, RolesGuard)
 @Controller('animals')
 export class AnimalsController {
   constructor(private readonly animalsService: AnimalsService) { }
@@ -19,6 +21,7 @@ export class AnimalsController {
   }
 
   @Post()
+  @Roles('ADMIN_TENANT')
   @ApiOperation({ summary: 'Create an animal' })
   @ApiResponse({ status: 201, description: 'The animal has been successfully created.' })
   @ApiResponse({ status: 400, description: 'Bad Request.' })
@@ -76,6 +79,7 @@ export class AnimalsController {
   }
 
   @Patch(':id')
+  @Roles('ADMIN_TENANT')
   @ApiOperation({ summary: 'Update an animal' })
   @ApiResponse({
     status: 200,
@@ -95,6 +99,7 @@ export class AnimalsController {
   }
 
   @Delete(':id')
+  @Roles('ADMIN_TENANT')
   @ApiOperation({ summary: 'Delete an animal' })
   @ApiResponse({
     status: 200,

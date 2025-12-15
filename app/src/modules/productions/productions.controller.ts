@@ -1,15 +1,16 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Req } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Req, UseGuards } from '@nestjs/common';
 import { ProductionsService } from './productions.service';
 import { CreateProductionDto } from './dto/create-production.dto';
 import { UpdateProductionDto } from './dto/update-production.dto';
-import { ApiTags, ApiOperation, ApiResponse, ApiHeader } from '@nestjs/swagger';
+import { ApiTags, ApiOperation, ApiResponse, ApiSecurity } from '@nestjs/swagger';
+import { JwtAuthGuard } from 'src/common/guards/jwt-auth.guard';
+import { RolesGuard } from 'src/common/guards/roles.guard';
+import { Roles } from 'src/common/decorators/roles.decorator';
 
 @ApiTags('Productions')
-@ApiHeader({
-  name: 'X-Tenant-ID',
-  description: 'Tenant ID required for all operations',
-  required: true,
-})
+@ApiSecurity('JWT-auth', ['JWT-auth'])
+@ApiSecurity('tenant-id', ['tenant-id'])
+@UseGuards(JwtAuthGuard, RolesGuard)
 @Controller('productions')
 export class ProductionsController {
   constructor(private readonly productionsService: ProductionsService) { }
@@ -19,6 +20,7 @@ export class ProductionsController {
   }
 
   @Post()
+  @Roles('ADMIN_TENANT','TRABAJADOR')
   @ApiOperation({ summary: 'Create a production record' })
   @ApiResponse({
     status: 201,
@@ -41,6 +43,7 @@ export class ProductionsController {
   }
 
   @Get()
+  @Roles('ADMIN_TENANT','TRABAJADOR')
   @ApiOperation({ summary: 'Get all production records' })
   @ApiResponse({
     status: 200,
@@ -63,6 +66,7 @@ export class ProductionsController {
   }
 
   @Get(':id')
+  @Roles('ADMIN_TENANT','TRABAJADOR')
   @ApiOperation({ summary: 'Get a specific production record' })
   @ApiResponse({
     status: 200,
@@ -86,6 +90,7 @@ export class ProductionsController {
   }
 
   @Patch(':id')
+  @Roles('ADMIN_TENANT','TRABAJADOR')
   @ApiOperation({ summary: 'Update a production record' })
   @ApiResponse({
     status: 200,
@@ -107,6 +112,7 @@ export class ProductionsController {
   }
 
   @Delete(':id')
+  @Roles('ADMIN_TENANT')
   @ApiOperation({ summary: 'Delete a production record' })
   @ApiResponse({
     status: 200,
