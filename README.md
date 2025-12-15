@@ -1,86 +1,226 @@
-# Agro-Track - Sistema de Gestión de Ganado
+# AgroTrack Backend API
 
-## 📋 Descripción
-Agro-Track es una aplicación web diseñada para la gestión integral de ganado, permitiendo a granjas y administradores llevar un control detallado de su inventario de animales, historial médico, vacunación, y personal. La plataforma está desarrollada con tecnologías modernas para ofrecer una experiencia de usuario fluida y eficiente.
+## 📝 Description
 
-## 🚀 Características Principales
+AgroTrack is a comprehensive livestock management system designed to help farmers and agricultural businesses track and manage their livestock operations efficiently. This backend API provides a robust foundation for managing animals, health records, feeding schedules, production tracking, and more in a multi-tenant environment with role-based access control.
 
-- **Gestión de Ganado**: Registro y seguimiento de animales individuales
-- **Control de Vacunas**: Seguimiento de vacunación y calendario de próximas dosis
-- **Historial Médico**: Registro de tratamientos y condiciones de salud
-- **Gestión de Granjas**: Administración de múltiples ubicaciones de granjas
-- **Roles de Usuario**: Diferentes niveles de acceso para administradores y empleados
-- **Reportes**: Generación de informes y estadísticas
+## 🚀 Features
 
-## 🛠️ Requisitos Previos
+- **Multi-tenant Architecture**: Support for multiple farms/tenants with isolated data
+- **Authentication & Authorization**: JWT-based authentication with role-based access control
+- **Animal Management**: Track individual animals, their details, and lineage
+- **Health Monitoring**: Record and monitor animal health, treatments, and vaccinations
+- **Production Tracking**: Monitor milk, egg, and other production metrics
+- **Feeding Management**: Schedule and track animal feeding
+- **Task Management**: Assign and track farm tasks
+- **Weight Tracking**: Monitor animal growth and weight changes
+- **Location Management**: Track animal movements between locations
+- **RESTful API**: Well-documented endpoints following REST principles
+- **Swagger Documentation**: Interactive API documentation
 
-- Node.js (v14 o superior)
-- npm (v6 o superior) o yarn
+## 🛠 Tech Stack
 
-## 🚀 Instalación
+- **Framework**: NestJS
+- **Language**: TypeScript
+- **Database**: PostgreSQL
+- **ORM**: TypeORM
+- **Authentication**: JWT, Passport.js
+- **API Documentation**: Swagger/OpenAPI
+- **Containerization**: Docker
+- **Package Manager**: npm
 
-1. **Clonar el repositorio**
+## 🚀 Getting Started
+
+### Prerequisites
+
+- Node.js (v16 or later)
+- npm (v8 or later)
+- PostgreSQL (v12 or later)
+- Docker (optional, for containerized deployment)
+
+### Installation
+
+1. **Clone the repository**
    ```bash
-   git clone https://github.com/Agros-Track/backend.git
-   cd agro-track-api
+   git clone <repository-url>
+   cd BACK-END
    ```
 
-2. **Instalar dependencias**
+2. **Install dependencies**
    ```bash
+   cd app
    npm install
-   # o
-   yarn install
    ```
 
-## 🏃 Ejecutar el Proyecto
+3. **Set up environment variables**
+   Create a `.env` file in the `app` directory with the following variables:
+   ```env
+   APP_CONTAINER_NAME=nest-app
+   APP_PORT=3000
+   NODE_ENV=development
+   APP_CPU_LIMIT=0.50
+   APP_MEM_LIMIT=512M
 
-### Modo Desarrollo
+   POSTGRES_USER=
+   POSTGRES_PASSWORD=
+   POSTGRES_DB=
+   POSTGRES_PORT=5432
+   POSTGRES_LOCAL=5432
+   DATABASE_URL=
+
+   DB_CPU_LIMIT=0.5
+   DB_MEM_LIMIT=512M
+
+   JWT_SECRET=
+   JWT_EXPIRES_IN=
+
+   API_PORT=3000
+   ```
+
+4. **Database Setup**
+   - Create a PostgreSQL database
+   - Import the database schema from `agrotrack.sql`
+   - Or use the provided TypeORM migrations
+
+### Running the Application
+
 ```bash
-# Iniciar servidor de desarrollo
-npm run start:dev
+# Development mode with hot-reload
+$ npm run start:dev
 
-# O para desarrollo con recarga en caliente
-npm run start:debug
+# Production build
+$ npm run build
+$ npm run start:prod
 ```
 
-### Modo Producción
+### Running with Docker
+
+1. Update the database configuration in `docker-compose.yml` if needed
+2. Run the following command from the project root:
+   ```bash
+   docker-compose up -d
+   ```
+
+## 📚 API Documentation
+
+### Base URL
+```
+http://localhost:3000/api
+```
+
+### Authentication
+All endpoints (except `/auth/login`) require a valid JWT token in the `Authorization` header:
+```
+Authorization: Bearer your-jwt-token
+```
+
+### API Endpoints
+
+#### Authentication
+| Method | Endpoint | Description | Required Headers | Required Role |
+|--------|----------|-------------|------------------|---------------|
+| POST   | /auth/login | User login | `Content-Type: application/json` | None |
+| GET    | /auth/me | Get current user info | `Authorization: Bearer <token>` | Any authenticated user |
+
+#### Animals
+| Method | Endpoint | Description | Required Headers | Required Role |
+|--------|----------|-------------|------------------|---------------|
+| POST   | /animals | Create a new animal | `Authorization: Bearer <token>`, `x-tenant-id: <tenant_id>` | ADMIN_TENANT |
+| GET    | /animals | Get all animals | `Authorization: Bearer <token>`, `x-tenant-id: <tenant_id>` | Any role |
+| GET    | /animals/:id | Get animal by ID | `Authorization: Bearer <token>`, `x-tenant-id: <tenant_id>` | Any role |
+| PATCH  | /animals/:id | Update animal | `Authorization: Bearer <token>`, `x-tenant-id: <tenant_id>` | ADMIN_TENANT |
+| DELETE | /animals/:id | Delete animal | `Authorization: Bearer <token>`, `x-tenant-id: <tenant_id>` | ADMIN_TENANT |
+
+#### Health Records
+| Method | Endpoint | Description | Required Headers | Required Role |
+|--------|----------|-------------|------------------|---------------|
+| POST   | /health  | Create health record | `Authorization: Bearer <token>`, `x-tenant-id: <tenant_id>` | ADMIN_TENANT, VET |
+| GET    | /health/animal/:animalId | Get health records for animal | `Authorization: Bearer <token>`, `x-tenant-id: <tenant_id>` | Any role |
+
+#### Feeding
+| Method | Endpoint | Description | Required Headers | Required Role |
+|--------|----------|-------------|------------------|---------------|
+| POST   | /feeding | Schedule feeding | `Authorization: Bearer <token>`, `x-tenant-id: <tenant_id>` | ADMIN_TENANT, WORKER |
+| GET    | /feeding/schedule | Get feeding schedule | `Authorization: Bearer <token>`, `x-tenant-id: <tenant_id>` | Any role |
+
+#### Production
+| Method | Endpoint | Description | Required Headers | Required Role |
+|--------|----------|-------------|------------------|---------------|
+| POST   | /productions | Record production | `Authorization: Bearer <token>`, `x-tenant-id: <tenant_id>` | WORKER, ADMIN_TENANT |
+| GET    | /productions | Get production records | `Authorization: Bearer <token>`, `x-tenant-id: <tenant_id>` | Any role |
+
+#### Tasks
+| Method | Endpoint | Description | Required Headers | Required Role |
+|--------|----------|-------------|------------------|---------------|
+| POST   | /tasks   | Create task | `Authorization: Bearer <token>`, `x-tenant-id: <tenant_id>` | ADMIN_TENANT, MANAGER |
+| GET    | /tasks   | Get tasks | `Authorization: Bearer <token>`, `x-tenant-id: <tenant_id>` | Any role |
+| PATCH  | /tasks/:id/complete | Complete task | `Authorization: Bearer <token>`, `x-tenant-id: <tenant_id>` | WORKER, ADMIN_TENANT |
+
+## 🧪 Testing
+
 ```bash
-# Compilar proyecto
-npm run build
+# Unit tests
+$ npm run test
 
-# Iniciar servidor en producción
-npm run start:prod
+# E2E tests
+$ npm run test:e2e
+
+# Test coverage
+$ npm run test:cov
 ```
 
-## 🔧 Comandos Útiles
-
-- `npm run start`: Inicia el servidor en modo producción
-- `npm run start:dev`: Inicia el servidor en modo desarrollo
-- `npm run test`: Ejecuta las pruebas unitarias
-- `npm run test:e2e`: Ejecuta pruebas end-to-end
-- `npm run lint`: Verifica la calidad del código
-- `npm run format`: Formatea el código automáticamente
-
-## 📁 Estructura del Proyecto
+## 📂 Project Structure
 
 ```
-agro-track-api/
-├── src/
-│   ├── modules/          # Módulos de la aplicación
-│   │   ├── auth/         # Autenticación y autorización
-│   │   ├── cattle/       # Gestión de ganado
-│   │   ├── farm/         # Gestión de granjas
-│   │   └── users/        # Gestión de usuarios
-│   ├── shared/           # Código compartido
-│   └── main.ts           # Punto de entrada de la aplicación
-├── test/                # Pruebas
-└── .env                 # Variables de entorno
+src/
+├── common/            # Shared modules, decorators, filters, etc.
+├── config/            # Configuration files
+├── database/          # Database configuration and migrations
+├── modules/           # Feature modules
+│   ├── animals/       # Animal management
+│   ├── auth/          # Authentication and authorization
+│   ├── feeding/       # Feeding schedules and tracking
+│   ├── health/        # Health records and treatments
+│   ├── locations/     # Location and movement tracking
+│   ├── movements/     # Animal movement history
+│   ├── productions/   # Production tracking
+│   ├── roles/         # Role-based access control
+│   ├── tasks/         # Task management
+│   ├── tenant/        # Multi-tenant configuration
+│   ├── users/         # User management
+│   └── weight/        # Weight tracking
+├── app.module.ts      # Root application module
+└── main.ts            # Application entry point
 ```
 
-## 📚 Documentación de la API
+## 🔒 Security
 
-La documentación de la API está disponible en `/api-docs` cuando el servidor está en ejecución en modo desarrollo.
+- JWT-based authentication
+- Role-based access control (RBAC)
+- Input validation using class-validator
+- Environment-based configuration
+- Secure password hashing with bcrypt
 
-## 📄 Licencia
+## 🤝 Contributing
 
-Este proyecto está bajo la Licencia MIT - ver el archivo [LICENSE](LICENSE) para más detalles.
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 🙏 Acknowledgments
+
+- Built with [NestJS](https://nestjs.com/)
+- Database powered by [PostgreSQL](https://www.postgresql.org/)
+- ORM by [TypeORM](https://typeorm.io/)
+- API documentation with [Swagger](https://swagger.io/)
+
+---
+
+**Note**: This project is under active development. Please report any issues or suggestions to the repository's issue tracker.               
+
