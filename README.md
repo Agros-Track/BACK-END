@@ -1,6 +1,3 @@
-<<<<<<< HEAD
-# BACK-END
-=======
 # AgroTrack Backend API
 
 ## 📝 Description
@@ -227,4 +224,3 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 **Note**: This project is under active development. Please report any issues or suggestions to the repository's issue tracker.               
 
->>>>>>> develop
