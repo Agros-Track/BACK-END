@@ -1,12 +1,12 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Finca } from './entities/finca.entity';
-import { Lote } from './entities/lote.entity';
-import { CreateFincaDto } from './dto/create-finca.dto';
-import { UpdateFincaDto } from './dto/update-finca.dto';
-import { CreateLoteDto } from './dto/create-lote.dto';
-import { UpdateLoteDto } from './dto/update-lote.dto';
+import { Finca } from './entities/farm.entity';
+import { Lote } from './entities/lot.entity';
+import { CreateFincaDto } from './dto/create-farm.dto';
+import { UpdateFincaDto } from './dto/update-farm.dto';
+import { CreateLoteDto } from './dto/create-lot.dto';
+import { UpdateLoteDto } from './dto/update-lot.dto';
 
 @Injectable()
 export class LocationsService {

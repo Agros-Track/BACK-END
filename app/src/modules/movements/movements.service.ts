@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException, ConflictException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, DataSource } from 'typeorm';
-import { MovimientoLote } from './entities/movimiento-lote.entity';
+import { MovimientoLote } from './entities/lot-movement.entity';
 import { CreateMovementDto } from './dto/create-movement.dto';
 import { AnimalsService } from '../animals/animals.service';
 import { LocationsService } from '../locations/locations.service';

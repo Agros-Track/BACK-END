@@ -1,6 +1,6 @@
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
-import { Animal } from '../../animals/entities/animal.entity';
-import { Lote } from '../../locations/entities/lote.entity';
+import { Animal } from '../../animals/entities/animals.entity';
+import { Lote } from '../../locations/entities/lot.entity';
 
 @Entity('produccion')
 export class Production {

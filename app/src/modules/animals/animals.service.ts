@@ -27,7 +27,7 @@ export class AnimalsService {
 import { Injectable, NotFoundException, ConflictException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Animal } from './entities/animal.entity';
+import { Animal } from './entities/animals.entity';
 import { CreateAnimalDto } from './dto/create-animal.dto';
 import { UpdateAnimalDto } from './dto/update-animal.dto';
 import { LocationsService } from '../locations/locations.service';

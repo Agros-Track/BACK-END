@@ -10,7 +10,7 @@ import { AnimalsController } from './animals.controller';
 export class AnimalsModule {}
 =======
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Animal } from './entities/animal.entity';
+import { Animal } from './entities/animals.entity';
 import { LocationsModule } from '../locations/locations.module';
 
 @Module({

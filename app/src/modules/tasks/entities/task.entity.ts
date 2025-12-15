@@ -1,7 +1,7 @@
 import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
-import { Animal } from '../../animals/entities/animal.entity';
-import { Lote } from '../../locations/entities/lote.entity';
-// import { User } from '../../users/entities/user.entity'; // Assuming Users module exists and entity is exported
+import { Animal } from '../../animals/entities/animals.entity';
+import { Lote } from '../../locations/entities/lot.entity';
+import { User } from '../../users/entities/user.entity';
 
 @Entity('tarea')
 export class Task {
@@ -20,9 +20,9 @@ export class Task {
     @Column({ name: 'usuario_asignado_id', nullable: true })
     assignedUserId: number;
 
-    // @ManyToOne(() => User, { onDelete: 'SET NULL', nullable: true })
-    // @JoinColumn({ name: 'usuario_asignado_id' })
-    // assignedUser: User;
+    @ManyToOne(() => User, { onDelete: 'SET NULL', nullable: true })
+    @JoinColumn({ name: 'usuario_asignado_id' })
+    assignedUser: User;
 
     @Column({ name: 'lote_id', nullable: true })
     loteId: number;

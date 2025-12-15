@@ -7,7 +7,7 @@ import {
     ManyToOne,
     JoinColumn,
 } from 'typeorm';
-import { Finca } from './finca.entity';
+import { Finca } from './farm.entity';
 
 @Entity('lote')
 export class Lote {

@@ -1,9 +1,9 @@
 import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Vacuna } from './entities/vacuna.entity';
-import { Enfermedad } from './entities/enfermedad.entity';
-import { Tratamiento } from './entities/tratamiento.entity';
+import { Vacuna } from './entities/vaccine.entity';
+import { Enfermedad } from './entities/disease.entity';
+import { Tratamiento } from './entities/treatment.entity';
 import { CreateVaccineDto } from './dto/create-vaccine.dto';
 import { CreateDiseaseDto } from './dto/create-disease.dto';
 import { CreateTreatmentDto } from './dto/create-treatment.dto';
