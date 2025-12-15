@@ -6,13 +6,13 @@ import {
     JoinColumn,
 } from 'typeorm';
 import { Animal } from '../../animals/entities/animals.entity';
-import { Lote } from '../../locations/entities/lot.entity';
+import { Lot } from '../../locations/entities/lot.entity';
 import { User } from '../../users/entities/user.entity';
 
-@Entity('vacuna')
-export class Vacuna {
-    @PrimaryGeneratedColumn({ name: 'vacuna_id' })
-    vacunaId: number;
+@Entity('vaccine')
+export class Vaccine {
+    @PrimaryGeneratedColumn({ name: 'vaccine_id' })
+    vaccineId: number;
 
     @Column({ name: 'tenant_id' })
     tenantId: number;
@@ -25,28 +25,28 @@ export class Vacuna {
     animal: Animal;
 
     @Column({ name: 'lote_id', nullable: true })
-    loteId: number;
+    lotId: number;
 
-    @ManyToOne(() => Lote, { onDelete: 'SET NULL', nullable: true })
-    @JoinColumn({ name: 'lote_id' })
-    lote: Lote;
+    @ManyToOne(() => Lot, { onDelete: 'SET NULL', nullable: true })
+    @JoinColumn({ name: 'lot_id' })
+    lot: Lot;
 
     @Column()
-    tipo: string;
+    type: string;
 
-    @Column({ name: 'fecha_aplicacion', type: 'date', nullable: true })
-    fechaAplicacion: Date;
+    @Column({ name: 'application_date', type: 'date', nullable: true })
+    applicationDate: Date;
 
-    @Column({ name: 'fecha_proxima', type: 'date', nullable: true })
-    fechaProxima: Date;
+    @Column({ name: 'next_date', type: 'date', nullable: true })
+    nextDate: Date;
 
-    @Column({ name: 'usuario_id', nullable: true })
-    usuarioId: number;
+    @Column({ name: 'user_id', nullable: true })
+    userId: number;
 
     @ManyToOne(() => User, { onDelete: 'SET NULL', nullable: true })
-    @JoinColumn({ name: 'usuario_id' })
-    usuario: User;
+    @JoinColumn({ name: 'user_id' })
+    user: User;
 
     @Column({ type: 'text', nullable: true })
-    nota: string;
+    note: string;
 }

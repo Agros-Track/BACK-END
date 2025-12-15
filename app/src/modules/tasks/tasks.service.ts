@@ -20,15 +20,15 @@ export class TasksService {
     if (createTaskDto.animalId) {
       await this.animalsService.findOne(createTaskDto.animalId, tenantId);
     }
-    if (createTaskDto.loteId) {
-      await this.locationsService.findOneLote(createTaskDto.loteId, tenantId);
+    if (createTaskDto.lotId) {
+      await this.locationsService.findOneLot(createTaskDto.lotId, tenantId);
     }
     // TODO: Validate assignedUserId if UsersService is available
 
     const task = this.taskRepository.create({
       ...createTaskDto,
       tenantId,
-      estado: createTaskDto.estado || 'pendiente',
+      status: createTaskDto.status || 'pending',
     });
     return this.taskRepository.save(task);
   }
@@ -36,15 +36,15 @@ export class TasksService {
   async findAll(tenantId: number): Promise<Task[]> {
     return this.taskRepository.find({
       where: { tenantId },
-      order: { fecha: 'ASC', hora: 'ASC' },
-      relations: ['animal', 'lote'],
+      order: { date: 'ASC', time: 'ASC' },
+      relations: ['animal', 'lot'],
     });
   }
 
   async findOne(id: number, tenantId: number): Promise<Task> {
     const task = await this.taskRepository.findOne({
       where: { taskId: id, tenantId },
-      relations: ['animal', 'lote'],
+      relations: ['animal', 'lot'],
     });
 
     if (!task) {

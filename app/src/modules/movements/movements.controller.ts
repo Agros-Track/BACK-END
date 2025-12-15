@@ -43,10 +43,10 @@ export class MovementsController {
                 {
                     movementId: 1,
                     animalId: 1,
-                    loteOrigenId: 5,
-                    loteDestinoId: 10,
-                    nota: 'Rotación de pastos',
-                    fecha: '2023-10-25T10:00:00Z',
+                    sourceLotId: 5,
+                    destinationLotId: 10,
+                    note: 'Rotación de pastos',
+                    movementDate: '2023-10-25T10:00:00Z',
                     tenantId: 1
                 }
             ]

@@ -10,30 +10,30 @@ export class CreateTreatmentDto {
     @ApiProperty({ description: 'ID of a related disease record', example: 10, required: false })
     @IsNumber()
     @IsOptional()
-    enfermedadId?: number;
+    diseaseId?: number;
 
     @ApiProperty({ description: 'Name of the medication', example: 'Antibiotic X', required: false })
     @IsString()
     @IsOptional()
-    medicamento?: string;
+    medication?: string;
 
     @ApiProperty({ description: 'Dosage', example: '5ml', required: false })
     @IsString()
     @IsOptional()
-    dosis?: string;
+    dosage?: string;
 
     @ApiProperty({ description: 'Duration in days', example: 5, required: false })
     @IsNumber()
     @IsOptional()
-    duracionDias?: number;
+    durationDays?: number;
 
     @ApiProperty({ description: 'Start date', example: '2023-11-01', required: false })
     @IsDateString()
     @IsOptional()
-    fechaInicio?: string;
+    startDate?: string;
 
     @ApiProperty({ description: 'Status of the treatment', example: 'in_progress', required: false })
     @IsString()
     @IsOptional()
-    estado?: string;
+    status?: string;
 }

@@ -7,36 +7,36 @@ import {
     CreateDateColumn,
 } from 'typeorm';
 import { Animal } from '../../animals/entities/animals.entity';
-import { Lote } from '../../locations/entities/lot.entity';
+import { Lot } from '../../locations/entities/lot.entity';
 import { User } from '../../users/entities/user.entity';
 
-@Entity('alimentacion')
-export class Alimentacion {
-    @PrimaryGeneratedColumn({ name: 'alimentacion_id' })
-    alimentacionId: number;
+@Entity('feeding')
+export class Feeding {
+    @PrimaryGeneratedColumn({ name: 'feeding_id' })
+    feedingId: number;
 
     @Column({ name: 'tenant_id' })
     tenantId: number;
 
-    @CreateDateColumn({ name: 'fecha_hora', type: 'timestamptz' })
-    fechaHora: Date;
+    @Column({ name: 'date_time', type: 'timestamptz' })
+    dateTime: Date;
 
-    @Column({ name: 'usuario_id', nullable: true })
-    usuarioId: number;
+    @Column({ name: 'user_id', nullable: true })
+    userId: number;
 
     @ManyToOne(() => User, { onDelete: 'SET NULL', nullable: true })
-    @JoinColumn({ name: 'usuario_id' })
-    usuario: User;
+    @JoinColumn({ name: 'user_id' })
+    user: User;
 
-    @Column({ name: 'aplica_a', default: 'lote' })
-    aplicaA: string;
+    @Column({ name: 'applies_to', default: 'lot' })
+    appliesTo: string;
 
-    @Column({ name: 'lote_id', nullable: true })
-    loteId: number;
+    @Column({ name: 'lot_id', nullable: true })
+    lotId: number;
 
-    @ManyToOne(() => Lote, { onDelete: 'SET NULL', nullable: true })
-    @JoinColumn({ name: 'lote_id' })
-    lote: Lote;
+    @ManyToOne(() => Lot, { onDelete: 'SET NULL', nullable: true })
+    @JoinColumn({ name: 'lot_id' })
+    lot: Lot;
 
     @Column({ name: 'animal_id', nullable: true })
     animalId: number;
@@ -45,18 +45,18 @@ export class Alimentacion {
     @JoinColumn({ name: 'animal_id' })
     animal: Animal;
 
-    @Column({ name: 'tipo_alimento', nullable: true })
-    tipoAlimento: string;
+    @Column({ name: 'feed_type', nullable: true })
+    feedType: string;
 
     @Column({ type: 'numeric', precision: 12, scale: 3, nullable: true })
-    cantidad: number;
+    quantity: number;
 
     @Column({ nullable: true })
-    unidad: string;
+    unit: string;
 
     @Column({ type: 'numeric', precision: 14, scale: 2, nullable: true })
-    costo: number;
+    cost: number;
 
-    @CreateDateColumn({ name: 'creado_en', type: 'timestamptz', default: () => 'CURRENT_TIMESTAMP' })
-    creadoEn: Date;
+    @CreateDateColumn({ name: 'created_at', type: 'timestamptz', default: () => 'CURRENT_TIMESTAMP' })
+    createdAt: Date;
 }

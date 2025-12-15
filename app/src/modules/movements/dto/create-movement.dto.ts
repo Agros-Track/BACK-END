@@ -10,10 +10,10 @@ export class CreateMovementDto {
     @ApiProperty({ description: 'ID of the destination lote', example: 10 })
     @IsNumber()
     @IsNotEmpty()
-    loteDestinoId: number;
+    destinationLotId: number;
 
     @ApiProperty({ description: 'Note/Reason for movement', example: 'Rotación de pastos', required: false })
     @IsString()
     @IsOptional()
-    nota?: string;
+    note?: string;
 }

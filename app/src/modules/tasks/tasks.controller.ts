@@ -25,10 +25,10 @@ export class TasksController {
     description: 'The task has been successfully created.',
     schema: {
       example: {
-        id: 1,
-        titulo: 'Vaccinate Lot A',
-        estado: 'pendiente',
-        fecha: '2023-12-01',
+        taskId: 1,
+        title: 'Vaccinate Lot A',
+        status: 'pending',
+        date: '2023-12-01',
         tenantId: 1
       }
     }
@@ -46,10 +46,10 @@ export class TasksController {
     schema: {
       example: [
         {
-          id: 1,
-          titulo: 'Vaccinate Lot A',
-          estado: 'pendiente',
-          fecha: '2023-12-01'
+          taskId: 1,
+          title: 'Vaccinate Lot A',
+          status: 'pending',
+          date: '2023-12-01'
         }
       ]
     }
@@ -66,10 +66,10 @@ export class TasksController {
     schema: {
       example: {
         taskId: 1,
-        titulo: 'Vaccinate Lot A',
-        descripcion: 'Apply aftosa vaccine',
-        estado: 'pendiente',
-        fecha: '2023-12-01',
+        title: 'Vaccinate Lot A',
+        description: 'Apply aftosa vaccine',
+        status: 'pending',
+        date: '2023-12-01',
         assignedUserId: 1,
         tenantId: 1
       }
@@ -88,9 +88,9 @@ export class TasksController {
     schema: {
       example: {
         taskId: 1,
-        titulo: 'Vaccinate Lot A',
-        estado: 'completada',
-        fecha: '2023-12-01'
+        title: 'Vaccinate Lot A',
+        status: 'completed',
+        date: '2023-12-01'
       }
     }
   })

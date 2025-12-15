@@ -7,38 +7,38 @@ import {
     ManyToOne,
     JoinColumn,
 } from 'typeorm';
-import { Finca } from './farm.entity';
+import { Farm } from './farm.entity';
 
-@Entity('lote')
-export class Lote {
-    @PrimaryGeneratedColumn({ name: 'lote_id' })
-    loteId: number;
+@Entity('lot')
+export class Lot {
+    @PrimaryGeneratedColumn({ name: 'lot_id' })
+    lotId: number;
 
-    @Column({ name: 'finca_id' })
-    fincaId: number;
+    @Column({ name: 'farm_id' })
+    farmId: number;
 
-    @ManyToOne(() => Finca, (finca) => finca.lotes, { onDelete: 'CASCADE' })
-    @JoinColumn({ name: 'finca_id' })
-    finca: Finca;
+    @ManyToOne(() => Farm, (farm) => farm.lots, { onDelete: 'CASCADE' })
+    @JoinColumn({ name: 'farm_id' })
+    farm: Farm;
 
     @Column()
-    nombre: string;
+    name: string;
 
     @Column({ nullable: true })
-    tipo: string;
+    type: string;
 
     @Column({ type: 'text', nullable: true })
-    descripcion: string;
+    description: string;
 
     @Column({ nullable: true })
-    coordenadas: string;
+    coordinates: string;
 
     @Column({ nullable: true })
-    estado: string;
+    status: string;
 
-    @CreateDateColumn({ name: 'creado_en', type: 'timestamptz' })
-    creadoEn: Date;
+    @CreateDateColumn({ name: 'created_at', type: 'timestamptz' })
+    createdAt: Date;
 
-    @UpdateDateColumn({ name: 'actualizado_en', type: 'timestamptz' })
-    actualizadoEn: Date;
+    @UpdateDateColumn({ name: 'updated_at', type: 'timestamptz' })
+    updatedAt: Date;
 }

@@ -1,9 +1,9 @@
 import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Vacuna } from './entities/vaccine.entity';
-import { Enfermedad } from './entities/disease.entity';
-import { Tratamiento } from './entities/treatment.entity';
+import { Vaccine } from './entities/vaccine.entity';
+import { Disease } from './entities/disease.entity';
+import { Treatment } from './entities/treatment.entity';
 import { CreateVaccineDto } from './dto/create-vaccine.dto';
 import { CreateDiseaseDto } from './dto/create-disease.dto';
 import { CreateTreatmentDto } from './dto/create-treatment.dto';
@@ -13,12 +13,12 @@ import { LocationsService } from '../locations/locations.service';
 @Injectable()
 export class HealthService {
     constructor(
-        @InjectRepository(Vacuna)
-        private readonly vaccineRepository: Repository<Vacuna>,
-        @InjectRepository(Enfermedad)
-        private readonly diseaseRepository: Repository<Enfermedad>,
-        @InjectRepository(Tratamiento)
-        private readonly treatmentRepository: Repository<Tratamiento>,
+        @InjectRepository(Vaccine)
+        private readonly vaccineRepository: Repository<Vaccine>,
+        @InjectRepository(Disease)
+        private readonly diseaseRepository: Repository<Disease>,
+        @InjectRepository(Treatment)
+        private readonly treatmentRepository: Repository<Treatment>,
         private readonly animalsService: AnimalsService,
         private readonly locationsService: LocationsService,
     ) { }
@@ -29,7 +29,7 @@ export class HealthService {
         await this.animalsService.findOne(animalId, tenantId);
         return await this.vaccineRepository.find({
             where: { animalId },
-            order: { fechaAplicacion: 'DESC' },
+            order: { applicationDate: 'DESC' },
         });
     }
 
@@ -37,17 +37,17 @@ export class HealthService {
         if (dto.animalId) {
             await this.animalsService.findOne(dto.animalId, tenantId);
         }
-        if (dto.loteId) {
-            await this.locationsService.findOneLote(dto.loteId, tenantId);
+        if (dto.lotId) {
+            await this.locationsService.findOneLot(dto.lotId, tenantId);
         }
-        if (!dto.animalId && !dto.loteId) {
-            throw new BadRequestException('Must provide either animalId or loteId');
+        if (!dto.animalId && !dto.lotId) {
+            throw new BadRequestException('Must provide either animalId or lotId');
         }
 
         const vaccine = this.vaccineRepository.create({
             ...dto,
             tenantId,
-            usuarioId: userId,
+            userId: userId,
         });
         return await this.vaccineRepository.save(vaccine);
     }
@@ -58,7 +58,7 @@ export class HealthService {
         await this.animalsService.findOne(animalId, tenantId);
         return await this.diseaseRepository.find({
             where: { animalId },
-            order: { fechaRegistro: 'DESC' },
+            order: { registrationDate: 'DESC' },
         });
     }
 
@@ -67,7 +67,7 @@ export class HealthService {
         const disease = this.diseaseRepository.create({
             ...dto,
             tenantId,
-            usuarioId: userId,
+            userId: userId,
         });
         return await this.diseaseRepository.save(disease);
     }
@@ -78,8 +78,8 @@ export class HealthService {
         await this.animalsService.findOne(animalId, tenantId);
         return await this.treatmentRepository.find({
             where: { animalId },
-            relations: ['enfermedad'],
-            order: { fechaInicio: 'DESC' },
+            relations: ['disease'],
+            order: { startDate: 'DESC' },
         });
     }
 
@@ -90,7 +90,7 @@ export class HealthService {
         const treatment = this.treatmentRepository.create({
             ...dto,
             tenantId,
-            usuarioId: userId,
+            userId: userId,
         });
         return await this.treatmentRepository.save(treatment);
     }

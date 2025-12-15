@@ -6,10 +6,10 @@ import {
     UpdateDateColumn,
 } from 'typeorm';
 
-@Entity('usuario')
+@Entity('user_app')
 export class User {
-    @PrimaryGeneratedColumn({ name: 'usuario_id' })
-    usuarioId: number;
+    @PrimaryGeneratedColumn({ name: 'user_id' })
+    userId: number;
 
     @Column({ name: 'tenant_id' })
     tenantId: number;
@@ -18,7 +18,7 @@ export class User {
     roleId: number;
 
     @Column()
-    nombre: string;
+    name: string;
 
     @Column({ unique: true })
     email: string;
@@ -26,12 +26,12 @@ export class User {
     @Column({ name: 'password_hash' })
     passwordHash: string;
 
-    @Column({ default: 'activo' })
-    estado: string;
+    @Column({ default: 'active' })
+    status: string;
 
-    @CreateDateColumn({ name: 'creado_en', type: 'timestamptz' })
-    creadoEn: Date;
+    @CreateDateColumn({ name: 'created_at', type: 'timestamptz' })
+    createdAt: Date;
 
-    @UpdateDateColumn({ name: 'actualizado_en', type: 'timestamptz' })
-    actualizadoEn: Date;
+    @UpdateDateColumn({ name: 'updated_at', type: 'timestamptz' })
+    updatedAt: Date;
 }

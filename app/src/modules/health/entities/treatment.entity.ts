@@ -6,13 +6,13 @@ import {
     JoinColumn,
 } from 'typeorm';
 import { Animal } from '../../animals/entities/animals.entity';
-import { Enfermedad } from './disease.entity';
+import { Disease } from './disease.entity';
 import { User } from '../../users/entities/user.entity';
 
-@Entity('tratamiento')
-export class Tratamiento {
-    @PrimaryGeneratedColumn({ name: 'tratamiento_id' })
-    tratamientoId: number;
+@Entity('treatment')
+export class Treatment {
+    @PrimaryGeneratedColumn({ name: 'treatment_id' })
+    treatmentId: number;
 
     @Column({ name: 'tenant_id' })
     tenantId: number;
@@ -24,35 +24,35 @@ export class Tratamiento {
     @JoinColumn({ name: 'animal_id' })
     animal: Animal;
 
-    @Column({ name: 'enfermedad_id', nullable: true })
-    enfermedadId: number;
+    @Column({ name: 'disease_id', nullable: true })
+    diseaseId: number;
 
-    @ManyToOne(() => Enfermedad, { onDelete: 'SET NULL', nullable: true })
-    @JoinColumn({ name: 'enfermedad_id' })
-    enfermedad: Enfermedad;
-
-    @Column({ nullable: true })
-    medicamento: string;
+    @ManyToOne(() => Disease, { onDelete: 'SET NULL', nullable: true })
+    @JoinColumn({ name: 'disease_id' })
+    disease: Disease;
 
     @Column({ nullable: true })
-    dosis: string;
-
-    @Column({ name: 'duracion_dias', nullable: true })
-    duracionDias: number;
-
-    @Column({ name: 'fecha_inicio', type: 'date', nullable: true })
-    fechaInicio: Date;
-
-    @Column({ name: 'fecha_fin', type: 'date', nullable: true })
-    fechaFin: Date;
+    medication: string;
 
     @Column({ nullable: true })
-    estado: string;
+    dosage: string;
 
-    @Column({ name: 'usuario_id', nullable: true })
-    usuarioId: number;
+    @Column({ name: 'duration_days', nullable: true })
+    durationDays: number;
+
+    @Column({ name: 'start_date', type: 'date', nullable: true })
+    startDate: Date;
+
+    @Column({ name: 'end_date', type: 'date', nullable: true })
+    endDate: Date;
+
+    @Column({ nullable: true })
+    status: string;
+
+    @Column({ name: 'user_id', nullable: true })
+    userId: number;
 
     @ManyToOne(() => User, { onDelete: 'SET NULL', nullable: true })
-    @JoinColumn({ name: 'usuario_id' })
-    usuario: User;
+    @JoinColumn({ name: 'user_id' })
+    user: User;
 }

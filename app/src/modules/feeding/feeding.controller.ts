@@ -28,12 +28,12 @@ export class FeedingController {
         description: 'The record has been successfully created.',
         schema: {
             example: {
-                id: 1,
-                aplicaA: 'lote',
-                loteId: 5,
-                tipoAlimento: 'Concentrado',
-                cantidad: 50,
-                unidad: 'kg',
+                feedingId: 1,
+                appliesTo: 'lot',
+                lotId: 5,
+                feedType: 'Concentrado',
+                quantity: 50,
+                unit: 'kg',
                 tenantId: 1
             }
         }
@@ -43,7 +43,7 @@ export class FeedingController {
         return this.feedingService.create(createFeedingDto, this.getTenantId(req), this.getUserId(req));
     }
 
-    @Get('lote/:loteId')
+    @Get('lot/:lotId')
     @ApiOperation({ summary: 'Get feeding records for a lote' })
     @ApiResponse({
         status: 200,
@@ -51,19 +51,19 @@ export class FeedingController {
         schema: {
             example: [
                 {
-                    id: 1,
-                    aplicaA: 'lote',
-                    loteId: 5,
-                    tipoAlimento: 'Concentrado',
-                    cantidad: 50,
-                    unidad: 'kg'
+                    feedingId: 1,
+                    appliesTo: 'lot',
+                    lotId: 5,
+                    feedType: 'Concentrado',
+                    quantity: 50,
+                    unit: 'kg'
                 }
             ]
         }
     })
     @ApiResponse({ status: 404, description: 'Lote not found.' })
-    findByLote(@Param('loteId') loteId: string, @Req() req: any) {
-        return this.feedingService.findAllByLote(+loteId, this.getTenantId(req));
+    findByLot(@Param('lotId') lotId: string, @Req() req: any) {
+        return this.feedingService.findAllByLot(+lotId, this.getTenantId(req));
     }
 
     @Get('animal/:animalId')
@@ -74,12 +74,12 @@ export class FeedingController {
         schema: {
             example: [
                 {
-                    id: 2,
-                    aplicaA: 'animal',
+                    feedingId: 2,
+                    appliesTo: 'animal',
                     animalId: 10,
-                    tipoAlimento: 'Vitaminas',
-                    cantidad: 10,
-                    unidad: 'ml'
+                    feedType: 'Vitaminas',
+                    quantity: 10,
+                    unit: 'ml'
                 }
             ]
         }

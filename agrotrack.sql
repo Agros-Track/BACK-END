@@ -1,290 +1,287 @@
--- Schema: Gestión de Fincas Ganaderas (PostgreSQL)
--- Nota: revisa privileges y tablespaces según tu entorno.
+-- Schema: Livestock Farm Management (PostgreSQL)
+-- Note: review privileges and tablespaces according to your environment.
 
 -- -----------------------------
--- Tabla: tenant
+-- Table: tenant
 -- -----------------------------
 CREATE TABLE tenant (
-  tenant_id BIGSERIAL PRIMARY KEY,
-  nombre VARCHAR(255) NOT NULL,
-  logo VARCHAR(512),
-  pais VARCHAR(100),
-  zona_horaria VARCHAR(100),
-  unidades_medida VARCHAR(20),
-  idioma VARCHAR(10),
-  plan VARCHAR(50),
-  limite_animales INT DEFAULT 0,
-  limite_usuarios INT DEFAULT 0,
-  creado_en TIMESTAMP WITH TIME ZONE DEFAULT now(),
-  actualizado_en TIMESTAMP WITH TIME ZONE DEFAULT now()
+    tenant_id BIGSERIAL PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    logo VARCHAR(512),
+    country VARCHAR(100),
+    timezone VARCHAR(100),
+    measurement_units VARCHAR(20),
+    language VARCHAR(10),
+    animal_limit INT DEFAULT 0,
+    user_limit INT DEFAULT 0,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT now(),
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT now()
 );
 
 -- -----------------------------
--- Tabla: roles
+-- Table: roles
 -- -----------------------------
 CREATE TABLE roles (
-  role_id BIGSERIAL PRIMARY KEY,
-  tenant_id BIGINT NOT NULL REFERENCES tenant(tenant_id) ON DELETE CASCADE,
-  nombre VARCHAR(100) NOT NULL,
-  slug VARCHAR(100) UNIQUE,
-  descripcion TEXT,
-  permisos JSONB DEFAULT '{}'::jsonb,
-  creado_en TIMESTAMP WITH TIME ZONE DEFAULT now(),
-  actualizado_en TIMESTAMP WITH TIME ZONE DEFAULT now()
+    role_id BIGSERIAL PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    slug VARCHAR(100) UNIQUE,
+    description TEXT,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT now(),
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT now()
 );
 
 -- -----------------------------
--- Tabla: usuario
+-- Table: user_app
 -- -----------------------------
-CREATE TABLE usuario (
-  usuario_id BIGSERIAL PRIMARY KEY,
-  tenant_id BIGINT NOT NULL REFERENCES tenant(tenant_id) ON DELETE CASCADE,
-  role_id BIGINT REFERENCES roles(role_id) ON DELETE SET NULL,
-  nombre VARCHAR(255) NOT NULL,
-  email VARCHAR(255) NOT NULL UNIQUE,
-  password_hash VARCHAR(512) NOT NULL,
-  estado VARCHAR(50) DEFAULT 'activo',
-  creado_en TIMESTAMP WITH TIME ZONE DEFAULT now(),
-  actualizado_en TIMESTAMP WITH TIME ZONE DEFAULT now()
+CREATE TABLE user_app (
+    user_id BIGSERIAL PRIMARY KEY,
+    tenant_id BIGINT REFERENCES tenant(tenant_id) ON DELETE CASCADE,
+    role_id BIGINT REFERENCES roles(role_id) ON DELETE SET NULL,
+    name VARCHAR(255) NOT NULL,
+    email VARCHAR(255) NOT NULL UNIQUE,
+    password_hash VARCHAR(512) NOT NULL,
+    status VARCHAR(50) DEFAULT 'active',
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT now(),
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT now()
 );
 
 -- -----------------------------
--- Tabla: finca
+-- Table: farm
 -- -----------------------------
-CREATE TABLE finca (
-  finca_id BIGSERIAL PRIMARY KEY,
-  tenant_id BIGINT NOT NULL REFERENCES tenant(tenant_id) ON DELETE CASCADE,
-  nombre VARCHAR(255) NOT NULL,
-  descripcion TEXT,
-  creado_en TIMESTAMP WITH TIME ZONE DEFAULT now(),
-  actualizado_en TIMESTAMP WITH TIME ZONE DEFAULT now()
+CREATE TABLE farm (
+    farm_id BIGSERIAL PRIMARY KEY,
+    tenant_id BIGINT NOT NULL REFERENCES tenant(tenant_id) ON DELETE CASCADE,
+    name VARCHAR(255) NOT NULL,
+    description TEXT,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT now(),
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT now()
 );
 
 -- -----------------------------
--- Tabla: lote
+-- Table: lot
 -- -----------------------------
-CREATE TABLE lote (
-  lote_id BIGSERIAL PRIMARY KEY,
-  finca_id BIGINT NOT NULL REFERENCES finca(finca_id) ON DELETE CASCADE,
-  nombre VARCHAR(255) NOT NULL,
-  tipo VARCHAR(100),
-  descripcion TEXT,
-  coordenadas VARCHAR(255),
-  estado VARCHAR(100),
-  creado_en TIMESTAMP WITH TIME ZONE DEFAULT now(),
-  actualizado_en TIMESTAMP WITH TIME ZONE DEFAULT now()
+CREATE TABLE lot (
+    lot_id BIGSERIAL PRIMARY KEY,
+    farm_id BIGINT NOT NULL REFERENCES farm(farm_id) ON DELETE CASCADE,
+    name VARCHAR(255) NOT NULL,
+    type VARCHAR(100),
+    description TEXT,
+    coordinates VARCHAR(255),
+    status VARCHAR(100),
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT now(),
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT now()
 );
 
 -- -----------------------------
--- Tabla: animal
+-- Table: animal
 -- -----------------------------
 CREATE TABLE animal (
-  animal_id BIGSERIAL PRIMARY KEY,
-  tenant_id BIGINT NOT NULL REFERENCES tenant(tenant_id) ON DELETE CASCADE,
-  finca_id BIGINT NOT NULL REFERENCES finca(finca_id) ON DELETE CASCADE,
-  lote_id BIGINT NOT NULL REFERENCES lote(lote_id) ON DELETE SET NULL,
-  codigo VARCHAR(255) NOT NULL UNIQUE,
-  tipo VARCHAR(50),
-  raza VARCHAR(100),
-  sexo VARCHAR(20),
-  fecha_nacimiento DATE,
-  estado VARCHAR(50) DEFAULT 'activo',
-  foto_url VARCHAR(512),
-  creado_en TIMESTAMP WITH TIME ZONE DEFAULT now(),
-  actualizado_en TIMESTAMP WITH TIME ZONE DEFAULT now()
+    animal_id BIGSERIAL PRIMARY KEY,
+    tenant_id BIGINT NOT NULL REFERENCES tenant(tenant_id) ON DELETE CASCADE,
+    farm_id BIGINT NOT NULL REFERENCES farm(farm_id) ON DELETE CASCADE,
+    lot_id BIGINT NOT NULL REFERENCES lot(lot_id) ON DELETE SET NULL,
+    code VARCHAR(255) NOT NULL UNIQUE,
+    type VARCHAR(50),
+    breed VARCHAR(100),
+    sex VARCHAR(20),
+    birth_date DATE,
+    status VARCHAR(50) DEFAULT 'active',
+    photo_url VARCHAR(512),
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT now(),
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT now()
 );
 
 -- -----------------------------
--- Tabla: movimiento_lote
+-- Table: lot_movement
 -- -----------------------------
-CREATE TABLE movimiento_lote (
-  movimiento_id BIGSERIAL PRIMARY KEY,
-  animal_id BIGINT NOT NULL REFERENCES animal(animal_id) ON DELETE CASCADE,
-  lote_origen_id BIGINT REFERENCES lote(lote_id) ON DELETE SET NULL,
-  lote_destino_id BIGINT REFERENCES lote(lote_id) ON DELETE SET NULL,
-  fecha_movimiento TIMESTAMP WITH TIME ZONE DEFAULT now(),
-  usuario_id BIGINT REFERENCES usuario(usuario_id) ON DELETE SET NULL,
-  nota TEXT
+CREATE TABLE lot_movement (
+    movement_id BIGSERIAL PRIMARY KEY,
+    animal_id BIGINT NOT NULL REFERENCES animal(animal_id) ON DELETE CASCADE,
+    source_lot_id BIGINT REFERENCES lot(lot_id) ON DELETE SET NULL,
+    destination_lot_id BIGINT REFERENCES lot(lot_id) ON DELETE SET NULL,
+    movement_date TIMESTAMP WITH TIME ZONE DEFAULT now(),
+    user_id BIGINT REFERENCES user_app(user_id) ON DELETE SET NULL,
+    note TEXT
 );
 
 -- -----------------------------
--- Tabla: alimentacion
+-- Table: feeding
 -- -----------------------------
-CREATE TABLE alimentacion (
-  alimentacion_id BIGSERIAL PRIMARY KEY,
-  tenant_id BIGINT NOT NULL REFERENCES tenant(tenant_id) ON DELETE CASCADE,
-  fecha_hora TIMESTAMP WITH TIME ZONE DEFAULT now(),
-  usuario_id BIGINT REFERENCES usuario(usuario_id) ON DELETE SET NULL,
-  aplica_a VARCHAR(20) CHECK (aplica_a IN ('lote','animal')) DEFAULT 'lote',
-  lote_id BIGINT REFERENCES lote(lote_id) ON DELETE SET NULL,
-  animal_id BIGINT REFERENCES animal(animal_id) ON DELETE SET NULL,
-  tipo_alimento VARCHAR(255),
-  cantidad NUMERIC(12,3),
-  unidad VARCHAR(20),
-  costo NUMERIC(14,2),
-  creado_en TIMESTAMP WITH TIME ZONE DEFAULT now()
+CREATE TABLE feeding (
+    feeding_id BIGSERIAL PRIMARY KEY,
+    tenant_id BIGINT NOT NULL REFERENCES tenant(tenant_id) ON DELETE CASCADE,
+    date_time TIMESTAMP WITH TIME ZONE DEFAULT now(),
+    user_id BIGINT REFERENCES user_app(user_id) ON DELETE SET NULL,
+    applies_to VARCHAR(20) CHECK (applies_to IN ('lot','animal')) DEFAULT 'lot',
+    lot_id BIGINT REFERENCES lot(lot_id) ON DELETE SET NULL,
+    animal_id BIGINT REFERENCES animal(animal_id) ON DELETE SET NULL,
+    feed_type VARCHAR(255),
+    quantity NUMERIC(12,3),
+    unit VARCHAR(20),
+    cost NUMERIC(14,2),
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT now()
 );
 
 -- -----------------------------
--- Tabla: vacuna
+-- Table: vaccine
 -- -----------------------------
-CREATE TABLE vacuna (
-  vacuna_id BIGSERIAL PRIMARY KEY,
-  tenant_id BIGINT NOT NULL REFERENCES tenant(tenant_id) ON DELETE CASCADE,
-  animal_id BIGINT REFERENCES animal(animal_id) ON DELETE SET NULL,
-  lote_id BIGINT REFERENCES lote(lote_id) ON DELETE SET NULL,
-  tipo VARCHAR(255),
-  fecha_aplicacion DATE,
-  fecha_proxima DATE,
-  usuario_id BIGINT REFERENCES usuario(usuario_id) ON DELETE SET NULL,
-  nota TEXT
+CREATE TABLE vaccine (
+    vaccine_id BIGSERIAL PRIMARY KEY,
+    tenant_id BIGINT NOT NULL REFERENCES tenant(tenant_id) ON DELETE CASCADE,
+    animal_id BIGINT REFERENCES animal(animal_id) ON DELETE SET NULL,
+    lot_id BIGINT REFERENCES lot(lot_id) ON DELETE SET NULL,
+    type VARCHAR(255),
+    application_date DATE,
+    next_date DATE,
+    user_id BIGINT REFERENCES user_app(user_id) ON DELETE SET NULL,
+    note TEXT
 );
 
 -- -----------------------------
--- Tabla: enfermedad
+-- Table: disease
 -- -----------------------------
-CREATE TABLE enfermedad (
-  enfermedad_id BIGSERIAL PRIMARY KEY,
-  tenant_id BIGINT NOT NULL REFERENCES tenant(tenant_id) ON DELETE CASCADE,
-  animal_id BIGINT NOT NULL REFERENCES animal(animal_id) ON DELETE CASCADE,
-  sintomas TEXT,
-  diagnostico VARCHAR(255),
-  gravedad VARCHAR(50),
-  fecha_registro DATE DEFAULT CURRENT_DATE,
-  usuario_id BIGINT REFERENCES usuario(usuario_id) ON DELETE SET NULL
+CREATE TABLE disease (
+    disease_id BIGSERIAL PRIMARY KEY,
+    tenant_id BIGINT NOT NULL REFERENCES tenant(tenant_id) ON DELETE CASCADE,
+    animal_id BIGINT NOT NULL REFERENCES animal(animal_id) ON DELETE CASCADE,
+    symptoms TEXT,
+    diagnosis VARCHAR(255),
+    severity VARCHAR(50),
+    registration_date DATE DEFAULT CURRENT_DATE,
+    user_id BIGINT REFERENCES user_app(user_id) ON DELETE SET NULL
 );
 
 -- -----------------------------
--- Tabla: tratamiento
+-- Table: treatment
 -- -----------------------------
-CREATE TABLE tratamiento (
-  tratamiento_id BIGSERIAL PRIMARY KEY,
-  tenant_id BIGINT NOT NULL REFERENCES tenant(tenant_id) ON DELETE CASCADE,
-  animal_id BIGINT NOT NULL REFERENCES animal(animal_id) ON DELETE CASCADE,
-  enfermedad_id BIGINT REFERENCES enfermedad(enfermedad_id) ON DELETE SET NULL,
-  medicamento VARCHAR(255),
-  dosis VARCHAR(255),
-  duracion_dias INT,
-  fecha_inicio DATE,
-  fecha_fin DATE,
-  estado VARCHAR(50),
-  usuario_id BIGINT REFERENCES usuario(usuario_id) ON DELETE SET NULL
+CREATE TABLE treatment (
+    treatment_id BIGSERIAL PRIMARY KEY,
+    tenant_id BIGINT NOT NULL REFERENCES tenant(tenant_id) ON DELETE CASCADE,
+    animal_id BIGINT NOT NULL REFERENCES animal(animal_id) ON DELETE CASCADE,
+    disease_id BIGINT REFERENCES disease(disease_id) ON DELETE SET NULL,
+    medication VARCHAR(255),
+    dosage VARCHAR(255),
+    duration_days INT,
+    start_date DATE,
+    end_date DATE,
+    status VARCHAR(50),
+    user_id BIGINT REFERENCES user_app(user_id) ON DELETE SET NULL
 );
 
 -- -----------------------------
--- Tabla: produccion
+-- Table: production
 -- -----------------------------
-CREATE TABLE produccion (
-  produccion_id BIGSERIAL PRIMARY KEY,
-  tenant_id BIGINT NOT NULL REFERENCES tenant(tenant_id) ON DELETE CASCADE,
-  animal_id BIGINT REFERENCES animal(animal_id) ON DELETE SET NULL,
-  lote_id BIGINT REFERENCES lote(lote_id) ON DELETE SET NULL,
-  fecha DATE NOT NULL,
-  producto_tipo VARCHAR(100) NOT NULL, -- e.g. 'leche', 'carne', 'huevos'
-  cantidad NUMERIC(14,4) NOT NULL,
-  unidad VARCHAR(50) NOT NULL,         -- e.g. 'litros', 'kg', 'unidades'
-  sala_origen VARCHAR(255),
-  usuario_id BIGINT REFERENCES usuario(usuario_id) ON DELETE SET NULL
+CREATE TABLE production (
+    production_id BIGSERIAL PRIMARY KEY,
+    tenant_id BIGINT NOT NULL REFERENCES tenant(tenant_id) ON DELETE CASCADE,
+    animal_id BIGINT REFERENCES animal(animal_id) ON DELETE SET NULL,
+    lot_id BIGINT REFERENCES lot(lot_id) ON DELETE SET NULL,
+    date DATE NOT NULL,
+    product_type VARCHAR(100) NOT NULL, -- e.g. 'milk', 'meat', 'eggs'
+    quantity NUMERIC(14,4) NOT NULL,
+    unit VARCHAR(50) NOT NULL,         -- e.g. 'liters', 'kg', 'units'
+    source_location VARCHAR(255),
+    user_id BIGINT REFERENCES user_app(user_id) ON DELETE SET NULL
 );
 
 -- -----------------------------
--- Tabla: pesaje
+-- Table: weight
 -- -----------------------------
-CREATE TABLE pesaje (
-  peso_id BIGSERIAL PRIMARY KEY,
-  tenant_id BIGINT NOT NULL REFERENCES tenant(tenant_id) ON DELETE CASCADE,
-  animal_id BIGINT NOT NULL REFERENCES animal(animal_id) ON DELETE CASCADE,
-  fecha DATE NOT NULL,
-  peso NUMERIC(12,3) NOT NULL,
-  usuario_id BIGINT REFERENCES usuario(usuario_id) ON DELETE SET NULL
+CREATE TABLE weight (
+    weight_id BIGSERIAL PRIMARY KEY,
+    tenant_id BIGINT NOT NULL REFERENCES tenant(tenant_id) ON DELETE CASCADE,
+    animal_id BIGINT NOT NULL REFERENCES animal(animal_id) ON DELETE CASCADE,
+    date DATE NOT NULL,
+    weight NUMERIC(12,3) NOT NULL,
+    user_id BIGINT REFERENCES user_app(user_id) ON DELETE SET NULL
 );
 
 -- -----------------------------
--- Tabla: tarea
+-- Table: task
 -- -----------------------------
-CREATE TABLE tarea (
-  tarea_id BIGSERIAL PRIMARY KEY,
-  tenant_id BIGINT NOT NULL REFERENCES tenant(tenant_id) ON DELETE CASCADE,
-  titulo VARCHAR(255) NOT NULL,
-  descripcion TEXT,
-  usuario_asignado_id BIGINT REFERENCES usuario(usuario_id) ON DELETE SET NULL,
-  lote_id BIGINT REFERENCES lote(lote_id) ON DELETE SET NULL,
-  animal_id BIGINT REFERENCES animal(animal_id) ON DELETE SET NULL,
-  fecha DATE,
-  hora TIME,
-  estado VARCHAR(50) DEFAULT 'pendiente',
-  creado_en TIMESTAMP WITH TIME ZONE DEFAULT now(),
-  actualizado_en TIMESTAMP WITH TIME ZONE DEFAULT now()
+CREATE TABLE task (
+    task_id BIGSERIAL PRIMARY KEY,
+    tenant_id BIGINT NOT NULL REFERENCES tenant(tenant_id) ON DELETE CASCADE,
+    title VARCHAR(255) NOT NULL,
+    description TEXT,
+    assigned_user_id BIGINT REFERENCES user_app(user_id) ON DELETE SET NULL,
+    lot_id BIGINT REFERENCES lot(lot_id) ON DELETE SET NULL,
+    animal_id BIGINT REFERENCES animal(animal_id) ON DELETE SET NULL,
+    date DATE,
+    time TIME,
+    status VARCHAR(50) DEFAULT 'pending',
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT now(),
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT now()
 );
 
 -- -----------------------------
--- Índices recomendados
+-- Recommended indexes
 -- -----------------------------
 CREATE INDEX idx_animal_tenant ON animal(tenant_id);
-CREATE INDEX idx_animal_lote ON animal(lote_id);
-CREATE INDEX idx_alimentacion_tenant_fecha ON alimentacion(tenant_id, fecha_hora);
-CREATE INDEX idx_produccion_tenant_fecha ON produccion(tenant_id, fecha);
-CREATE INDEX idx_pesaje_tenant_fecha ON pesaje(tenant_id, fecha);
-CREATE INDEX idx_vacuna_tenant_fecha ON vacuna(tenant_id, fecha_aplicacion);
-CREATE INDEX idx_enfermedad_tenant_fecha ON enfermedad(tenant_id, fecha_registro);
-CREATE INDEX idx_tarea_tenant_fecha ON tarea(tenant_id, fecha);
+CREATE INDEX idx_animal_lot ON animal(lot_id);
+CREATE INDEX idx_feeding_tenant_date ON feeding(tenant_id, date_time);
+CREATE INDEX idx_production_tenant_date ON production(tenant_id, date);
+CREATE INDEX idx_weight_tenant_date ON weight(tenant_id, date);
+CREATE INDEX idx_vaccine_tenant_date ON vaccine(tenant_id, application_date);
+CREATE INDEX idx_disease_tenant_date ON disease(tenant_id, registration_date);
+CREATE INDEX idx_task_tenant_date ON task(tenant_id, date);
 
 -- -----------------------------
--- Triggers/actualización de actualizado_en (opcional)
--- Si quieres mantener actualizado `actualizado_en`, puedes crear triggers.
--- Ejemplo simple para actualizar 'actualizado_en' en varias tablas:
+-- Triggers/updating updated_at (optional)
+-- If you want to maintain `updated_at`, you can create triggers.
+-- Simple example to update 'updated_at' in various tables:
 -- -----------------------------
 CREATE OR REPLACE FUNCTION set_updated_at()
 RETURNS TRIGGER AS $$
 BEGIN
-  NEW.actualizado_en = now();
-  RETURN NEW;
+    NEW.updated_at = now();
+    RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
 
--- Aplica trigger para tablas con 'actualizado_en'
+-- Apply trigger for tables with 'updated_at'
 DO $$
 BEGIN
-  -- Lista de tablas a las que aplicar trigger
-  PERFORM 1 FROM pg_tables WHERE schemaname = 'public' AND tablename = 'tenant';
-  -- tenant
-  IF EXISTS (SELECT 1 FROM pg_tables WHERE schemaname = 'public' AND tablename = 'tenant') THEN
-    CREATE TRIGGER trg_tenant_updated_at
-      BEFORE UPDATE ON tenant
-      FOR EACH ROW
-      EXECUTE PROCEDURE set_updated_at();
-  END IF;
-  -- roles
-  IF EXISTS (SELECT 1 FROM pg_tables WHERE schemaname = 'public' AND tablename = 'roles') THEN
-    CREATE TRIGGER trg_roles_updated_at
-      BEFORE UPDATE ON roles
-      FOR EACH ROW
-      EXECUTE PROCEDURE set_updated_at();
-  END IF;
-  -- usuario
-  IF EXISTS (SELECT 1 FROM pg_tables WHERE schemaname = 'public' AND tablename = 'usuario') THEN
-    CREATE TRIGGER trg_usuario_updated_at
-      BEFORE UPDATE ON usuario
-      FOR EACH ROW
-      EXECUTE PROCEDURE set_updated_at();
-    CREATE TRIGGER trg_finca_updated_at
-      BEFORE UPDATE ON finca
-      FOR EACH ROW
-      EXECUTE PROCEDURE set_updated_at();
-    CREATE TRIGGER trg_lote_updated_at
-      BEFORE UPDATE ON lote
-      FOR EACH ROW
-      EXECUTE PROCEDURE set_updated_at();
-    CREATE TRIGGER trg_animal_updated_at
-      BEFORE UPDATE ON animal
-      FOR EACH ROW
-      EXECUTE PROCEDURE set_updated_at();
-    CREATE TRIGGER trg_tarea_updated_at
-      BEFORE UPDATE ON tarea
-      FOR EACH ROW
-      EXECUTE PROCEDURE set_updated_at();
-  END IF;
+    -- List of tables to apply trigger
+    PERFORM 1 FROM pg_tables WHERE schemaname = 'public' AND tablename = 'tenant';
+    -- tenant
+    IF EXISTS (SELECT 1 FROM pg_tables WHERE schemaname = 'public' AND tablename = 'tenant') THEN
+        CREATE TRIGGER trg_tenant_updated_at
+            BEFORE UPDATE ON tenant
+            FOR EACH ROW
+            EXECUTE PROCEDURE set_updated_at();
+    END IF;
+    -- roles
+    IF EXISTS (SELECT 1 FROM pg_tables WHERE schemaname = 'public' AND tablename = 'roles') THEN
+        CREATE TRIGGER trg_roles_updated_at
+            BEFORE UPDATE ON roles
+            FOR EACH ROW
+            EXECUTE PROCEDURE set_updated_at();
+    END IF;
+    -- user
+    IF EXISTS (SELECT 1 FROM pg_tables WHERE schemaname = 'public' AND tablename = 'user_app') THEN
+        CREATE TRIGGER trg_user_updated_at
+            BEFORE UPDATE ON user_app
+            FOR EACH ROW
+            EXECUTE PROCEDURE set_updated_at();
+        CREATE TRIGGER trg_farm_updated_at
+            BEFORE UPDATE ON farm
+            FOR EACH ROW
+            EXECUTE PROCEDURE set_updated_at();
+        CREATE TRIGGER trg_lot_updated_at
+            BEFORE UPDATE ON lot
+            FOR EACH ROW
+            EXECUTE PROCEDURE set_updated_at();
+        CREATE TRIGGER trg_animal_updated_at
+            BEFORE UPDATE ON animal
+            FOR EACH ROW
+            EXECUTE PROCEDURE set_updated_at();
+        CREATE TRIGGER trg_task_updated_at
+            BEFORE UPDATE ON task
+            FOR EACH ROW
+            EXECUTE PROCEDURE set_updated_at();
+    END IF;
 END;
 $$ LANGUAGE plpgsql;
 
--- Fin del script
+-- End of script

@@ -1,97 +1,97 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Finca } from './entities/farm.entity';
-import { Lote } from './entities/lot.entity';
-import { CreateFincaDto } from './dto/create-farm.dto';
-import { UpdateFincaDto } from './dto/update-farm.dto';
-import { CreateLoteDto } from './dto/create-lot.dto';
-import { UpdateLoteDto } from './dto/update-lot.dto';
+import { Farm } from './entities/farm.entity';
+import { Lot } from './entities/lot.entity';
+import { CreateFarmDto } from './dto/create-farm.dto';
+import { UpdateFarmDto } from './dto/update-farm.dto';
+import { CreateLotDto } from './dto/create-lot.dto';
+import { UpdateLotDto } from './dto/update-lot.dto';
 
 @Injectable()
 export class LocationsService {
     constructor(
-        @InjectRepository(Finca)
-        private readonly fincaRepository: Repository<Finca>,
-        @InjectRepository(Lote)
-        private readonly loteRepository: Repository<Lote>,
+        @InjectRepository(Farm)
+        private readonly farmRepository: Repository<Farm>,
+        @InjectRepository(Lot)
+        private readonly lotRepository: Repository<Lot>,
     ) { }
 
-    // --- FINCAS ---
+    // --- FARMS ---
 
-    async createFinca(createFincaDto: CreateFincaDto, tenantId: number) {
-        const finca = this.fincaRepository.create({
-            ...createFincaDto,
+    async createFarm(createFarmDto: CreateFarmDto, tenantId: number) {
+        const farm = this.farmRepository.create({
+            ...createFarmDto,
             tenantId,
         });
-        return await this.fincaRepository.save(finca);
+        return await this.farmRepository.save(farm);
     }
 
-    async findAllFincas(tenantId: number) {
-        return await this.fincaRepository.find({
+    async findAllFarms(tenantId: number) {
+        return await this.farmRepository.find({
             where: { tenantId },
-            relations: ['lotes'],
+            relations: ['lots'],
         });
     }
 
-    async findOneFinca(id: number, tenantId: number) {
-        const finca = await this.fincaRepository.findOne({
-            where: { fincaId: id, tenantId },
-            relations: ['lotes'],
+    async findOneFarm(id: number, tenantId: number) {
+        const farm = await this.farmRepository.findOne({
+            where: { farmId: id, tenantId },
+            relations: ['lots'],
         });
-        if (!finca) throw new NotFoundException(`Finca with ID ${id} not found`);
-        return finca;
+        if (!farm) throw new NotFoundException(`Farm with ID ${id} not found`);
+        return farm;
     }
 
-    async updateFinca(id: number, updateFincaDto: UpdateFincaDto, tenantId: number) {
-        const finca = await this.findOneFinca(id, tenantId);
-        const updated = Object.assign(finca, updateFincaDto);
-        return await this.fincaRepository.save(updated);
+    async updateFarm(id: number, updateFarmDto: UpdateFarmDto, tenantId: number) {
+        const farm = await this.findOneFarm(id, tenantId);
+        const updated = Object.assign(farm, updateFarmDto);
+        return await this.farmRepository.save(updated);
     }
 
-    async removeFinca(id: number, tenantId: number) {
-        const finca = await this.findOneFinca(id, tenantId);
-        return await this.fincaRepository.remove(finca);
+    async removeFarm(id: number, tenantId: number) {
+        const farm = await this.findOneFarm(id, tenantId);
+        return await this.farmRepository.remove(farm);
     }
 
-    // --- LOTES ---
+    // --- LOTS ---
 
-    async createLote(createLoteDto: CreateLoteDto, tenantId: number) {
-        // Verify Finca belongs to Tenant
-        await this.findOneFinca(createLoteDto.fincaId, tenantId);
+    async createLot(createLotDto: CreateLotDto, tenantId: number) {
+        // Verify Farm belongs to Tenant
+        await this.findOneFarm(createLotDto.farmId, tenantId);
 
-        const lote = this.loteRepository.create(createLoteDto);
-        return await this.loteRepository.save(lote);
+        const lot = this.lotRepository.create(createLotDto);
+        return await this.lotRepository.save(lot);
     }
 
-    async findAllLotes(tenantId: number) {
-        return await this.loteRepository.find({
-            where: { finca: { tenantId } },
-            relations: ['finca'],
+    async findAllLots(tenantId: number) {
+        return await this.lotRepository.find({
+            where: { farm: { tenantId } },
+            relations: ['farm'],
         });
     }
 
-    async findOneLote(id: number, tenantId: number) {
-        const lote = await this.loteRepository.findOne({
-            where: { loteId: id, finca: { tenantId } },
-            relations: ['finca'],
+    async findOneLot(id: number, tenantId: number) {
+        const lot = await this.lotRepository.findOne({
+            where: { lotId: id, farm: { tenantId } },
+            relations: ['farm'],
         });
-        if (!lote) throw new NotFoundException(`Lote with ID ${id} not found`);
-        return lote;
+        if (!lot) throw new NotFoundException(`Lot with ID ${id} not found`);
+        return lot;
     }
 
-    async updateLote(id: number, updateLoteDto: UpdateLoteDto, tenantId: number) {
-        const lote = await this.findOneLote(id, tenantId);
-        // If changing fincaId, verify new finca
-        if (updateLoteDto.fincaId) {
-            await this.findOneFinca(updateLoteDto.fincaId, tenantId);
+    async updateLot(id: number, updateLotDto: UpdateLotDto, tenantId: number) {
+        const lot = await this.findOneLot(id, tenantId);
+        // If changing farmId, verify new farm
+        if (updateLotDto.farmId) {
+            await this.findOneFarm(updateLotDto.farmId, tenantId);
         }
-        const updated = Object.assign(lote, updateLoteDto);
-        return await this.loteRepository.save(updated);
+        const updated = Object.assign(lot, updateLotDto);
+        return await this.lotRepository.save(updated);
     }
 
-    async removeLote(id: number, tenantId: number) {
-        const lote = await this.findOneLote(id, tenantId);
-        return await this.loteRepository.remove(lote);
+    async removeLot(id: number, tenantId: number) {
+        const lot = await this.findOneLot(id, tenantId);
+        return await this.lotRepository.remove(lot);
     }
 }
