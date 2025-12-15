@@ -31,6 +31,11 @@ export class UsersService {
       if (!role) throw new BadRequestException('Role not found for tenant');
     }
 
+    if (dto.role_id) {
+      role = await this.rolesRepo.findOne({ where: { role_id: dto.role_id } });
+      if (role?.slug === 'ADMIN_TENANT') throw new ForbiddenException('Insufficient permissions')
+    }
+
     const password_hash = await bcrypt.hash(dto.password, 10);
     const user = this.usersRepo.create({
       name: dto.name,
