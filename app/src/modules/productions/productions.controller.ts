@@ -25,11 +25,11 @@ export class ProductionsController {
     description: 'The record has been successfully created.',
     schema: {
       example: {
-        id: 1,
-        fecha: '2023-10-25',
+        productionId: 1,
+        date: '2023-10-25',
         productType: 'leche',
-        cantidad: 25.5,
-        unidad: 'litros',
+        quantity: 25.5,
+        unit: 'litros',
         animalId: 1,
         tenantId: 1
       }
@@ -48,11 +48,11 @@ export class ProductionsController {
     schema: {
       example: [
         {
-          id: 1,
-          fecha: '2023-10-25',
+          productionId: 1,
+          date: '2023-10-25',
           productType: 'leche',
-          cantidad: 25.5,
-          unidad: 'litros',
+          quantity: 25.5,
+          unit: 'litros',
           animalId: 1
         }
       ]
@@ -69,13 +69,13 @@ export class ProductionsController {
     description: 'Return the production record.',
     schema: {
       example: {
-        id: 1,
-        fecha: '2023-10-25',
+        productionId: 1,
+        date: '2023-10-25',
         productType: 'leche',
-        cantidad: 25.5,
-        unidad: 'litros',
+        quantity: 25.5,
+        unit: 'litros',
         animalId: 1,
-        loteId: null,
+        lotId: null,
         tenantId: 1
       }
     }
@@ -92,11 +92,11 @@ export class ProductionsController {
     description: 'The record has been successfully updated.',
     schema: {
       example: {
-        id: 1,
-        fecha: '2023-10-25',
+        productionId: 1,
+        date: '2023-10-25',
         productType: 'leche',
-        cantidad: 30.0,
-        unidad: 'litros',
+        quantity: 30.0,
+        unit: 'litros',
         animalId: 1
       }
     }

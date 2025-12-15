@@ -7,13 +7,13 @@ import {
     CreateDateColumn,
 } from 'typeorm';
 import { Animal } from '../../animals/entities/animals.entity';
-import { Lote } from '../../locations/entities/lot.entity';
+import { Lot } from '../../locations/entities/lot.entity';
 import { User } from '../../users/entities/user.entity';
 
-@Entity('movimiento_lote')
-export class MovimientoLote {
-    @PrimaryGeneratedColumn({ name: 'movimiento_id' })
-    movimientoId: number;
+@Entity('lot_movement')
+export class LotMovement {
+    @PrimaryGeneratedColumn({ name: 'movement_id' })
+    movementId: number;
 
     @Column({ name: 'animal_id' })
     animalId: number;
@@ -22,30 +22,30 @@ export class MovimientoLote {
     @JoinColumn({ name: 'animal_id' })
     animal: Animal;
 
-    @Column({ name: 'lote_origen_id', nullable: true })
-    loteOrigenId: number;
+    @Column({ name: 'source_lot_id', nullable: true })
+    sourceLotId: number;
 
-    @ManyToOne(() => Lote, { onDelete: 'SET NULL', nullable: true })
-    @JoinColumn({ name: 'lote_origen_id' })
-    loteOrigen: Lote;
+    @ManyToOne(() => Lot, { onDelete: 'SET NULL', nullable: true })
+    @JoinColumn({ name: 'source_lot_id' })
+    sourceLot: Lot;
 
-    @Column({ name: 'lote_destino_id', nullable: true })
-    loteDestinoId: number;
+    @Column({ name: 'destination_lot_id', nullable: true })
+    destinationLotId: number;
 
-    @ManyToOne(() => Lote, { onDelete: 'SET NULL', nullable: true })
-    @JoinColumn({ name: 'lote_destino_id' })
-    loteDestino: Lote;
+    @ManyToOne(() => Lot, { onDelete: 'SET NULL', nullable: true })
+    @JoinColumn({ name: 'destination_lot_id' })
+    destinationLot: Lot;
 
-    @CreateDateColumn({ name: 'fecha_movimiento', type: 'timestamptz' })
-    fechaMovimiento: Date;
+    @CreateDateColumn({ name: 'movement_date', type: 'timestamptz' })
+    movementDate: Date;
 
-    @Column({ name: 'usuario_id', nullable: true })
-    usuarioId: number;
+    @Column({ name: 'user_id', nullable: true })
+    userId: number;
 
     @ManyToOne(() => User, { onDelete: 'SET NULL', nullable: true })
-    @JoinColumn({ name: 'usuario_id' })
-    usuario: User;
+    @JoinColumn({ name: 'user_id' })
+    user: User;
 
     @Column({ type: 'text', nullable: true })
-    nota: string;
+    note: string;
 }

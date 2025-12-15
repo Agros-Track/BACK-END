@@ -6,28 +6,28 @@ import {
     UpdateDateColumn,
     OneToMany,
 } from 'typeorm';
-import { Lote } from './lot.entity';
+import { Lot } from './lot.entity';
 
-@Entity('finca')
-export class Finca {
-    @PrimaryGeneratedColumn({ name: 'finca_id' })
-    fincaId: number;
+@Entity('farm')
+export class Farm {
+    @PrimaryGeneratedColumn({ name: 'farm_id' })
+    farmId: number;
 
     @Column({ name: 'tenant_id' })
     tenantId: number;
 
     @Column()
-    nombre: string;
+    name: string;
 
     @Column({ type: 'text', nullable: true })
-    descripcion: string;
+    description: string;
 
-    @CreateDateColumn({ name: 'creado_en', type: 'timestamptz' })
-    creadoEn: Date;
+    @CreateDateColumn({ name: 'created_at', type: 'timestamptz' })
+    createdAt: Date;
 
-    @UpdateDateColumn({ name: 'actualizado_en', type: 'timestamptz' })
-    actualizadoEn: Date;
+    @UpdateDateColumn({ name: 'updated_at', type: 'timestamptz' })
+    updatedAt: Date;
 
-    @OneToMany(() => Lote, (lote) => lote.finca)
-    lotes: Lote[];
+    @OneToMany(() => Lot, (lot) => lot.farm)
+    lots: Lot[];
 }

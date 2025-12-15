@@ -66,13 +66,13 @@ export class AnimalsController {
       example: [
         {
           animalId: 1,
-          codigo: 'CO-12345',
-          tipo: 'cow',
-          raza: 'Holstein',
-          sexo: 'F',
-          estado: 'activo',
-          fincaId: 1,
-          loteId: 5
+          code: 'CO-12345',
+          type: 'cow',
+          breed: 'Holstein',
+          sex: 'F',
+          status: 'active',
+          farmId: 1,
+          lotId: 5
         }
       ]
     }
@@ -89,14 +89,14 @@ export class AnimalsController {
     schema: {
       example: {
         animalId: 1,
-        codigo: 'CO-12345',
-        tipo: 'cow',
-        raza: 'Holstein',
-        sexo: 'F',
-        fechaNacimiento: '2020-01-01',
-        estado: 'activo',
-        fincaId: 1,
-        loteId: 5,
+        code: 'CO-12345',
+        type: 'cow',
+        breed: 'Holstein',
+        sex: 'F',
+        birthDate: '2020-01-01',
+        status: 'active',
+        farmId: 1,
+        lotId: 5,
         tenantId: 1
       }
     }
@@ -114,9 +114,9 @@ export class AnimalsController {
     schema: {
       example: {
         animalId: 1,
-        codigo: 'CO-12345',
-        estado: 'vendido',
-        loteId: 10
+        code: 'CO-12345',
+        status: 'sold',
+        lotId: 10
       }
     }
   })

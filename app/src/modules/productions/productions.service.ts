@@ -22,8 +22,8 @@ export class ProductionsService {
       await this.animalsService.findOne(createProductionDto.animalId, tenantId);
     }
 
-    if (createProductionDto.loteId) {
-      await this.locationsService.findOneLote(createProductionDto.loteId, tenantId);
+    if (createProductionDto.lotId) {
+      await this.locationsService.findOneLot(createProductionDto.lotId, tenantId);
     }
 
     const production = this.productionRepository.create({
@@ -36,15 +36,15 @@ export class ProductionsService {
   async findAll(tenantId: number): Promise<Production[]> {
     return this.productionRepository.find({
       where: { tenantId },
-      order: { fecha: 'DESC' },
-      relations: ['animal', 'lote'],
+      order: { date: 'DESC' },
+      relations: ['animal', 'lot'],
     });
   }
 
   async findOne(id: number, tenantId: number): Promise<Production> {
     const production = await this.productionRepository.findOne({
       where: { productionId: id, tenantId },
-      relations: ['animal', 'lote'],
+      relations: ['animal', 'lot'],
     });
 
     if (!production) {

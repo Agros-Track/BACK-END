@@ -41,15 +41,15 @@ export class AnimalsService {
   ) { }
 
   async create(createAnimalDto: CreateAnimalDto, tenantId: number) {
-    // 1. Verify Finca belongs to Tenant
-    await this.locationsService.findOneFinca(createAnimalDto.fincaId, tenantId);
+    // 1. Verify Farm belongs to Tenant
+    await this.locationsService.findOneFarm(createAnimalDto.farmId, tenantId);
 
     // 2. Verify Lote if present
-    if (createAnimalDto.loteId) {
-      const lote = await this.locationsService.findOneLote(createAnimalDto.loteId, tenantId);
-      // Optional: Verify Lote belongs to Finca
-      if (lote.fincaId !== createAnimalDto.fincaId) {
-        throw new ConflictException('Lote does not belong to the specified Finca');
+    if (createAnimalDto.lotId) {
+      const lote = await this.locationsService.findOneLot(createAnimalDto.lotId, tenantId);
+      // Optional: Verify Lot belongs to Farm
+      if (lote.farmId !== createAnimalDto.farmId) {
+        throw new ConflictException('Lot does not belong to the specified Farm');
       }
     }
 
@@ -72,14 +72,14 @@ export class AnimalsService {
   async findAll(tenantId: number) {
     return await this.animalRepository.find({
       where: { tenantId },
-      relations: ['finca', 'lote'],
+      relations: ['farm', 'lot'],
     });
   }
 
   async findOne(id: number, tenantId: number) {
     const animal = await this.animalRepository.findOne({
       where: { animalId: id, tenantId },
-      relations: ['finca', 'lote'],
+      relations: ['farm', 'lot'],
     });
     if (!animal) throw new NotFoundException(`Animal with ID ${id} not found`);
     return animal;
@@ -88,16 +88,16 @@ export class AnimalsService {
   async update(id: number, updateAnimalDto: UpdateAnimalDto, tenantId: number) {
     const animal = await this.findOne(id, tenantId);
 
-    // Validate new Finca/Lote if provided
-    if (updateAnimalDto.fincaId) {
-      await this.locationsService.findOneFinca(updateAnimalDto.fincaId, tenantId);
+    // Validate new Farm/Lot if provided
+    if (updateAnimalDto.farmId) {
+      await this.locationsService.findOneFarm(updateAnimalDto.farmId, tenantId);
     }
-    if (updateAnimalDto.loteId) {
-      const lote = await this.locationsService.findOneLote(updateAnimalDto.loteId, tenantId);
-      // Check consistency if fincaId is also being updated or use existing
-      const targetFincaId = updateAnimalDto.fincaId || animal.fincaId;
-      if (lote.fincaId !== targetFincaId) {
-        throw new ConflictException('Lote does not belong to the specified Finca');
+    if (updateAnimalDto.lotId) {
+      const lote = await this.locationsService.findOneLot(updateAnimalDto.lotId, tenantId);
+      // Check consistency if farmId is also being updated or use existing
+      const targetFarmId = updateAnimalDto.farmId || animal.farmId;
+      if (lote.farmId !== targetFarmId) {
+        throw new ConflictException('Lot does not belong to the specified Farm');
       }
     }
 

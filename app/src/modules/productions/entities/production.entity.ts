@@ -1,10 +1,10 @@
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { Animal } from '../../animals/entities/animals.entity';
-import { Lote } from '../../locations/entities/lot.entity';
+import { Lot } from '../../locations/entities/lot.entity';
 
-@Entity('produccion')
+@Entity('production')
 export class Production {
-    @PrimaryGeneratedColumn({ name: 'produccion_id' })
+    @PrimaryGeneratedColumn({ name: 'production_id' })
     productionId: number;
 
     @Column({ name: 'tenant_id' })
@@ -18,27 +18,27 @@ export class Production {
     animal: Animal;
 
     @Column({ name: 'lote_id', nullable: true })
-    loteId: number;
+    lotId: number;
 
-    @ManyToOne(() => Lote, { onDelete: 'SET NULL', nullable: true })
-    @JoinColumn({ name: 'lote_id' })
-    lote: Lote;
+    @ManyToOne(() => Lot, { onDelete: 'SET NULL', nullable: true })
+    @JoinColumn({ name: 'lot_id' })
+    lot: Lot;
 
-    @Column({ type: 'date' })
-    fecha: string;
+    @Column({ name: 'date', type: 'date' })
+    date: string;
 
-    @Column({ name: 'producto_tipo', length: 100 })
+    @Column({ name: 'product_type', length: 100 })
     productType: string; // e.g., 'leche', 'carne', 'huevos'
 
     @Column({ type: 'numeric', precision: 14, scale: 4 })
-    cantidad: number;
+    quantity: number;
 
     @Column({ length: 50 })
-    unidad: string; // e.g., 'litros', 'kg'
+    unit: string; // e.g., 'litros', 'kg'
 
-    @Column({ name: 'sala_origen', length: 255, nullable: true })
-    originRoom: string;
+    @Column({ name: 'source_location', length: 255, nullable: true })
+    sourceLocation: string;
 
-    @Column({ name: 'usuario_id', nullable: true })
+    @Column({ name: 'user_id', nullable: true })
     userId: number;
 }

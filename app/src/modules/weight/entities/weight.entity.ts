@@ -1,9 +1,9 @@
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { Animal } from '../../animals/entities/animals.entity';
 
-@Entity('pesaje')
+@Entity('weight')
 export class Weight {
-    @PrimaryGeneratedColumn({ name: 'peso_id' })
+    @PrimaryGeneratedColumn({ name: 'weight_id' })
     weightId: number;
 
     @Column({ name: 'tenant_id' })
@@ -16,12 +16,12 @@ export class Weight {
     @JoinColumn({ name: 'animal_id' })
     animal: Animal;
 
-    @Column({ name: 'fecha', type: 'date' })
+    @Column({ name: 'date', type: 'date' })
     date: Date;
 
-    @Column({ name: 'peso', type: 'numeric', precision: 12, scale: 3 })
+    @Column({ name: 'weight', type: 'numeric', precision: 12, scale: 3 })
     weight: number;
 
-    @Column({ name: 'usuario_id', nullable: true })
+    @Column({ name: 'user_id', nullable: true })
     userId: number;
 }

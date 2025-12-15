@@ -10,15 +10,15 @@ export class CreateDiseaseDto {
     @ApiProperty({ description: 'Symptoms description', example: 'Fever, loss of appetite', required: false })
     @IsString()
     @IsOptional()
-    sintomas?: string;
+    symptoms?: string;
 
     @ApiProperty({ description: 'Diagnosis', example: 'Flu', required: false })
     @IsString()
     @IsOptional()
-    diagnostico?: string;
+    diagnosis?: string;
 
     @ApiProperty({ description: 'Severity', example: 'Moderate', required: false })
     @IsString()
     @IsOptional()
-    gravedad?: string;
+    severity?: string;
 }

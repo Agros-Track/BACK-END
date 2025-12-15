@@ -10,25 +10,25 @@ export class CreateVaccineDto {
     @ApiProperty({ description: 'ID of the lote (optional if applying to individual)', example: 5, required: false })
     @IsNumber()
     @IsOptional()
-    loteId?: number;
+    lotId?: number;
 
     @ApiProperty({ description: 'Type/Name of the vaccine', example: 'Aftosa' })
     @IsString()
     @IsNotEmpty()
-    tipo: string;
+    type: string;
 
     @ApiProperty({ description: 'Date of application', example: '2023-11-01', required: false })
     @IsDateString()
     @IsOptional()
-    fechaAplicacion?: string;
+    applicationDate?: string;
 
     @ApiProperty({ description: 'Date of next application', example: '2024-05-01', required: false })
     @IsDateString()
     @IsOptional()
-    fechaProxima?: string;
+    nextDate?: string;
 
     @ApiProperty({ description: 'Notes', example: 'Routine checkup', required: false })
     @IsString()
     @IsOptional()
-    nota?: string;
+    note?: string;
 }

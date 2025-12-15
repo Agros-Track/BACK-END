@@ -43,10 +43,10 @@ export class HealthController {
                 {
                     vaccineId: 1,
                     animalId: 1,
-                    tipo: 'Aftosa',
-                    fechaAplicacion: '2023-11-01',
-                    fechaProxima: '2024-05-01',
-                    nota: 'Routine vaccination',
+                    type: 'Aftosa',
+                    applicationDate: '2023-11-01',
+                    nextDate: '2024-05-01',
+                    note: 'Routine vaccination',
                     tenantId: 1
                 }
             ]
@@ -75,9 +75,9 @@ export class HealthController {
                 {
                     diseaseId: 1,
                     animalId: 1,
-                    sintomas: 'Fever, loss of appetite',
-                    diagnostico: 'Flu',
-                    gravedad: 'Moderate',
+                    symptoms: 'Fever, loss of appetite',
+                    diagnosis: 'Flu',
+                    severity: 'Moderate',
                     tenantId: 1
                 }
             ]
@@ -106,11 +106,11 @@ export class HealthController {
                 {
                     treatmentId: 1,
                     animalId: 1,
-                    medicamento: 'Antibiotic X',
-                    dosis: '5ml',
-                    duracionDias: 5,
-                    fechaInicio: '2023-11-01',
-                    estado: 'in_progress',
+                    medication: 'Antibiotic X',
+                    dosage: '5ml',
+                    durationDays: 5,
+                    startDate: '2023-11-01',
+                    status: 'in_progress',
                     tenantId: 1
                 }
             ]

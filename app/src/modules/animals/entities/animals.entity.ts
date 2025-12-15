@@ -11,8 +11,8 @@ import {
     JoinColumn,
     OneToMany,
 } from 'typeorm';
-import { Finca } from '../../locations/entities/farm.entity';
-import { Lote } from '../../locations/entities/lot.entity';
+import { Farm } from '../../locations/entities/farm.entity';
+import { Lot } from '../../locations/entities/lot.entity';
 
 @Entity('animal')
 export class Animal {
@@ -22,45 +22,45 @@ export class Animal {
     @Column({ name: 'tenant_id' })
     tenantId: number;
 
-    @Column({ name: 'finca_id' })
-    fincaId: number;
+    @Column({ name: 'farm_id' })
+    farmId: number;
 
-    @ManyToOne(() => Finca, { onDelete: 'CASCADE' })
-    @JoinColumn({ name: 'finca_id' })
-    finca: Finca;
+    @ManyToOne(() => Farm, { onDelete: 'CASCADE' })
+    @JoinColumn({ name: 'farm_id' })
+    farm: Farm;
 
-    @Column({ name: 'lote_id', nullable: true })
-    loteId: number;
+    @Column({ name: 'lot_id', nullable: true })
+    lotId: number;
 
-    @ManyToOne(() => Lote, { onDelete: 'SET NULL', nullable: true })
-    @JoinColumn({ name: 'lote_id' })
-    lote: Lote;
+    @ManyToOne(() => Lot, { onDelete: 'SET NULL', nullable: true })
+    @JoinColumn({ name: 'lot_id' })
+    lot: Lot;
 
     @Column({ unique: true })
-    codigo: string;
+    code: string;
 
     @Column({ nullable: true })
-    tipo: string;
+    type: string;
 
     @Column({ nullable: true })
-    raza: string;
+    breed: string;
 
     @Column({ nullable: true })
-    sexo: string;
+    sex: string;
 
-    @Column({ name: 'fecha_nacimiento', type: 'date', nullable: true })
-    fechaNacimiento: Date;
+    @Column({ name: 'birth_date', type: 'date', nullable: true })
+    birthDate: Date;
 
-    @Column({ default: 'activo' })
-    estado: string;
+    @Column({ default: 'active' })
+    status: string;
 
-    @Column({ name: 'foto_url', nullable: true })
-    fotoUrl: string;
+    @Column({ name: 'photo_url', nullable: true })
+    photoUrl: string;
 
-    @CreateDateColumn({ name: 'creado_en', type: 'timestamptz' })
-    creadoEn: Date;
+    @CreateDateColumn({ name: 'created_at', type: 'timestamptz' })
+    createdAt: Date;
 
-    @UpdateDateColumn({ name: 'actualizado_en', type: 'timestamptz' })
-    actualizadoEn: Date;
+    @UpdateDateColumn({ name: 'updated_at', type: 'timestamptz' })
+    updatedAt: Date;
 }
 >>>>>>> feature/modules

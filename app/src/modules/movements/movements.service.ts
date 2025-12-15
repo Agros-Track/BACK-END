@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException, ConflictException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, DataSource } from 'typeorm';
-import { MovimientoLote } from './entities/lot-movement.entity';
+import { LotMovement } from './entities/lot-movement.entity';
 import { CreateMovementDto } from './dto/create-movement.dto';
 import { AnimalsService } from '../animals/animals.service';
 import { LocationsService } from '../locations/locations.service';
@@ -9,25 +9,25 @@ import { LocationsService } from '../locations/locations.service';
 @Injectable()
 export class MovementsService {
     constructor(
-        @InjectRepository(MovimientoLote)
-        private readonly movementRepository: Repository<MovimientoLote>,
+        @InjectRepository(LotMovement)
+        private readonly movementRepository: Repository<LotMovement>,
         private readonly animalsService: AnimalsService,
         private readonly locationsService: LocationsService,
         private readonly dataSource: DataSource,
     ) { }
 
     async create(createMovementDto: CreateMovementDto, tenantId: number, userId: number) {
-        const { animalId, loteDestinoId, nota } = createMovementDto;
+        const { animalId, destinationLotId, note } = createMovementDto;
 
         // 1. Verify Animal
         const animal = await this.animalsService.findOne(animalId, tenantId);
 
         // 2. Verify Destination Lote
-        const loteDestino = await this.locationsService.findOneLote(loteDestinoId, tenantId);
+        const loteDestino = await this.locationsService.findOneLot(destinationLotId, tenantId);
 
         // 3. Logic: If animal is already in that lote, no need to move
-        if (animal.loteId === loteDestinoId) {
-            throw new ConflictException('Animal is already in the destination lote');
+        if (animal.lotId === destinationLotId) {
+            throw new ConflictException('Animal is already in the destination lot');
         }
 
         // 4. Transactional Operation: Create Movement Log AND Update Animal Location
@@ -39,15 +39,15 @@ export class MovementsService {
             // Create Log
             const movement = this.movementRepository.create({
                 animalId,
-                loteOrigenId: animal.loteId, // Current lote becomes origin
-                loteDestinoId,
-                usuarioId: userId,
-                nota,
+                sourceLotId: animal.lotId, // Current lot becomes origin
+                destinationLotId,
+                userId: userId,
+                note,
             });
             await queryRunner.manager.save(movement);
 
             // Update Animal
-            animal.loteId = loteDestinoId;
+            animal.lotId = destinationLotId;
             // We need to use valid update object or save entity
             // Since we are inside transaction, let's use queryRunner manager
             await queryRunner.manager.save(animal);
@@ -69,8 +69,8 @@ export class MovementsService {
 
         return await this.movementRepository.find({
             where: { animalId },
-            order: { fechaMovimiento: 'DESC' },
-            relations: ['loteOrigen', 'loteDestino', 'usuario'],
+            order: { movementDate: 'DESC' },
+            relations: ['sourceLot', 'destinationLot', 'user'],
         });
     }
 }

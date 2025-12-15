@@ -10,12 +10,12 @@ export class CreateProductionDto {
     @ApiProperty({ description: 'ID of the lote (optional if associated with animal)', example: 5, required: false })
     @IsOptional()
     @IsNumber()
-    loteId?: number;
+    lotId?: number;
 
     @ApiProperty({ description: 'Date of production', example: '2023-10-25' })
     @IsNotEmpty()
     @IsDateString()
-    fecha: string;
+    date: string;
 
     @ApiProperty({ description: 'Type of product', example: 'leche' })
     @IsNotEmpty()
@@ -25,17 +25,17 @@ export class CreateProductionDto {
     @ApiProperty({ description: 'Quantity produced', example: 25.5 })
     @IsNotEmpty()
     @IsNumber()
-    cantidad: number;
+    quantity: number;
 
     @ApiProperty({ description: 'Unit of measurement', example: 'litros' })
     @IsNotEmpty()
     @IsString()
-    unidad: string;
+    unit: string;
 
     @ApiProperty({ description: 'Origin room or location', example: 'Sala de ordeño 1', required: false })
     @IsOptional()
     @IsString()
-    originRoom?: string;
+    sourceLocation?: string;
 
     @ApiProperty({ description: 'ID of the user recording the production', example: 1, required: false })
     @IsOptional()

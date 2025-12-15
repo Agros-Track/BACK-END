@@ -8,10 +8,10 @@ import {
 import { Animal } from '../../animals/entities/animals.entity';
 import { User } from '../../users/entities/user.entity';
 
-@Entity('enfermedad')
-export class Enfermedad {
-    @PrimaryGeneratedColumn({ name: 'enfermedad_id' })
-    enfermedadId: number;
+@Entity('disease')
+export class Disease {
+    @PrimaryGeneratedColumn({ name: 'disease_id' })
+    diseaseId: number;
 
     @Column({ name: 'tenant_id' })
     tenantId: number;
@@ -24,21 +24,21 @@ export class Enfermedad {
     animal: Animal;
 
     @Column({ type: 'text', nullable: true })
-    sintomas: string;
+    symptoms: string;
 
     @Column({ nullable: true })
-    diagnostico: string;
+    diagnosis: string;
 
     @Column({ nullable: true })
-    gravedad: string;
+    severity: string;
 
-    @Column({ name: 'fecha_registro', type: 'date', default: () => 'CURRENT_DATE' })
-    fechaRegistro: Date;
+    @Column({ name: 'registration_date', type: 'date', default: () => 'CURRENT_DATE' })
+    registrationDate: Date;
 
-    @Column({ name: 'usuario_id', nullable: true })
-    usuarioId: number;
+    @Column({ name: 'user_id', nullable: true })
+    userId: number;
 
     @ManyToOne(() => User, { onDelete: 'SET NULL', nullable: true })
-    @JoinColumn({ name: 'usuario_id' })
-    usuario: User;
+    @JoinColumn({ name: 'user_id' })
+    user: User;
 }
