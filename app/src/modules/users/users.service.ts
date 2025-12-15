@@ -2,6 +2,7 @@ import {
   Injectable,
   BadRequestException,
   NotFoundException,
+  ForbiddenException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -28,6 +29,11 @@ export class UsersService {
     if (dto.role_id) {
       role = await this.rolesRepo.findOne({ where: { role_id: dto.role_id } });
       if (!role) throw new BadRequestException('Role not found for tenant');
+    }
+
+    if (dto.role_id) {
+      role = await this.rolesRepo.findOne({ where: { role_id: dto.role_id } });
+      if (role?.slug === 'ADMIN_TENANT') throw new ForbiddenException('Insufficient permissions')
     }
 
     const password_hash = await bcrypt.hash(dto.password, 10);
