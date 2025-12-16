@@ -67,6 +67,7 @@ AgroTrack is a comprehensive livestock management system designed to help farmer
    POSTGRES_PORT=5432
    POSTGRES_LOCAL=5432
    DATABASE_URL=
+   FRONTEND_URL=
 
    DB_CPU_LIMIT=0.5
    DB_MEM_LIMIT=512M
