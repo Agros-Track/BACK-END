@@ -4,6 +4,7 @@ import {
   ApiOperation,
   ApiResponse,
   ApiBearerAuth,
+  ApiSecurity,
 } from '@nestjs/swagger';
 import { AuthService } from './auth.service';
 import { LoginAuthDto } from './dto/login-auth.dto';
@@ -13,7 +14,7 @@ import { CurrentUser } from '../../common/decorators/current-user.decorator';
 @ApiTags('Auth')
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(private readonly authService: AuthService) { }
 
   @Post('login')
   @ApiOperation({
@@ -21,6 +22,7 @@ export class AuthController {
     description:
       'Authenticate user with email and password. Returns JWT token and user data. SUPER_ADMIN does not require x-tenant-id header.',
   })
+  @ApiSecurity('tenant-id')
   @ApiResponse({
     status: 200,
     description: 'Successful login',
